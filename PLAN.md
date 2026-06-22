@@ -2,6 +2,18 @@
 
 _A work plan_
 
+## Summary
+
+```
+ERS-7 “hello body” program
+
+1. Boot from OPEN-R stick.
+2. Set Illume-Face LEDs.
+3. Read head/back touch sensor.
+4. On touch: nod head once.
+5. Log event over wireless console.
+```
+
 ## Overview
 
 The Sony AIBO ERS-7 supports several levels of programmability, ranging from simple behavior customization to complete low-level robot control.
