@@ -7,3 +7,8 @@ sdk/bld-*/
 sdk/local/
 sdk/work/
 sdk/build-aibo-toolchain-local.sh
+samples/common/HelloWorld/HelloWorld/*.o
+samples/common/HelloWorld/HelloWorld/*.elf
+samples/common/HelloWorld/HelloWorld/*.snap.cc
+samples/common/HelloWorld/HelloWorld/*.bin
+!samples/common/HelloWorld/MS/OPEN-R/MW/OBJS/HELLO.BIN

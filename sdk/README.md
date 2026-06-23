@@ -208,6 +208,8 @@ source scripts/env.sh
 ./scripts/check-openr.sh
 ```
 
+On this Debian machine, that check completed successfully against the repo-local SDK.
+
 ### 6. Build a sample
 
 DogsBody suggests building a Sony sample as the first proof that the toolchain works.
@@ -219,6 +221,41 @@ samples/ers7/BallTrackingHead7
 ```
 
 Before using the repo copy, it is still useful to compare against the freshly extracted Sony sample tree in `sdk/work/`.
+
+The repo-local `HelloWorld` sample has now been built successfully with:
+
+```bash
+cd samples/common/HelloWorld/HelloWorld
+make OPENRSDK_ROOT="$PWD/../../../sdk/local/OPEN_R_SDK"
+```
+
+From the repo root, the less error-prone equivalent is:
+
+```bash
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
+```
+
+That produced:
+
+- `samples/common/HelloWorld/HelloWorld/helloWorld.bin`
+- `samples/common/HelloWorld/HelloWorld/helloWorld.nosnap.elf`
+- `samples/common/HelloWorld/HelloWorld/helloWorld.rel.elf`
+
+To stage the sample into its Memory Stick layout:
+
+```bash
+mkdir -p samples/common/HelloWorld/MS/OPEN-R/MW/OBJS
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK" \
+  install
+```
+
+That produced the deployable payload:
+
+- `samples/common/HelloWorld/MS/OPEN-R/MW/OBJS/HELLO.BIN`
+
+The extra `mkdir -p` is needed because this sample tree already includes `MS/OPEN-R/MW/CONF`, but not the sibling `OBJS` directory expected by the original Sony `install` target.
 
 ## Notes About Age And Compatibility
 
@@ -250,6 +287,10 @@ If that succeeds:
 export OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
 source scripts/env.sh
 ./scripts/check-openr.sh
-cd samples/common/HelloWorld/HelloWorld
-make
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
+mkdir -p samples/common/HelloWorld/MS/OPEN-R/MW/OBJS
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK" \
+  install
 ```
