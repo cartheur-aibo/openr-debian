@@ -1,107 +1,80 @@
 # openr-debian for ERS-7
 
-Debian Linux development scaffold for programming the Sony AIBO ERS-7 with OPEN-R.
+Debian workspace for building and testing Sony AIBO ERS-7 OPEN-R software.
 
-This repository targets an ERS-7 / ERS-7M2 style workflow: build OPEN-R objects on Debian, copy them to a dedicated AIBO Memory Stick, and boot the robot from that stick for development.
+## Start Here
 
-> Legal note: this repository does **not** include Sony OPEN-R SDK files, Aperios system files, AIBO MIND software, Memory Stick images, or proprietary binaries. It expects you to install legally obtained SDK/system files separately.
-
-## Target platform
-
-- Robot: Sony AIBO ERS-7
-- Companion software context: AIBO MIND 2, but development uses a separate OPEN-R boot Memory Stick
-- SDK: OPEN-R SDK 1.1.5-era tooling
-- Host OS: Debian Linux
-- Language: C++ using OPEN-R object model
-
-## Why OPEN-R?
-
-OPEN-R exposes the low-level robotics side of AIBO: joints, sensors, LEDs, audio, camera, and wireless networking. It runs on Sony Aperios, a message-oriented cooperative multitasking OS. OPEN-R objects should process messages quickly and return control rather than blocking in long loops.
-
-## Repository layout
-
-```text
-.
-├── README.md
-├── tasks/
-│   ├── debian-setup.md
-│   ├── memory-stick.md
-│   ├── openr-model.md
-│   ├── first-project.md
-│   └── cribsheet.md
-├── scripts/
-│   ├── env.sh
-│   ├── check-openr.sh
-│   └── deploy-to-stick.sh
-├── src/
-│   └── hello_body/
-│       ├── Makefile
-│       ├── HelloBody.cc
-│       ├── HelloBody.h
-│       └── README.md
-└── stick/
-    └── OPEN-R/
-        ├── APP/PC/
-        ├── MW/OBJS/
-        └── SYSTEM/conf/
-```
-
-## Quick start
-
-```bash
-git clone https://github.com/cartheur-aibo/openr-debian.git
-cd openr-debian
-
-# Edit if your SDK path differs
-source scripts/env.sh
-
-# Verify expected directories/tools
-./scripts/check-openr.sh
-
-# Build a known-good Sony sample first
-cd samples/common/HelloWorld/HelloWorld
-make
-```
-
-For the practical Debian bring-up order, see `tasks/cribsheet.md`.
-
-## Simulator Direction
-
-We cannot fully boot Sony Aperios on Debian from this repo alone, but we can still simulate the parts that matter most during development:
-
-- Memory Stick object layout
-- OPEN-R object load order from `OBJECT.CFG`
-- source-level lifecycle behavior
-- scripted sensor/event replay
-
-The first layer is now available:
+1. Check the local boot layout:
 
 ```bash
 scripts/simulate-openr-boot.sh samples/common/HelloWorld
 ```
 
-That checks what Aperios would attempt to load from a local `MS/OPEN-R` tree and flags missing object payloads.
-
-The first host-side lifecycle shim is also available:
+2. Run the host-side lifecycle proof:
 
 ```bash
 make -C aperios run-hello-world
 ```
 
-That compiles the original Sony `HelloWorld` sample source against a tiny host-side OPEN-R shim and drives `DoInit`, `DoStart`, `DoStop`, and `DoDestroy` on Debian.
+3. If you want a real Memory Stick payload, build and stage `HelloWorld`:
 
-For the broader simulator plan, see [simulator/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/simulator/README.md) and [aperios/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/aperios/README.md).
+```bash
+export OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
+source scripts/env.sh
+./scripts/check-openr.sh
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
+mkdir -p samples/common/HelloWorld/MS/OPEN-R/MW/OBJS
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK" \
+  install
+```
 
-## Development rule
+## What This Repo Does
 
-Use a **separate programmable Memory Stick**. Do not modify your working AIBO MIND 2 stick.
+- builds legacy OPEN-R tools on Debian
+- builds real OPEN-R sample payloads for Memory Stick deployment
+- simulates OPEN-R boot layout from `OBJECT.CFG`
+- runs a first host-side lifecycle shim for OPEN-R objects
 
-## First milestone
+## Easy Commands
 
-The first useful program should do only three things:
+Check what a local OPEN-R stick tree would try to boot:
 
-1. Boot successfully from the OPEN-R Memory Stick.
-2. Flash or set an ERS-7 face/body LED state.
-3. React to a touch sensor with a small head movement or logged event.
+```bash
+scripts/simulate-openr-boot.sh samples/common/HelloWorld
+```
 
-That proves the full build/deploy/boot/control path before you attempt walking, vision, or autonomous behavior.
+Run the host-side lifecycle simulator for the original Sony `HelloWorld` sample:
+
+```bash
+make -C aperios run-hello-world
+```
+
+## Build A Real Sample
+
+```bash
+export OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
+source scripts/env.sh
+./scripts/check-openr.sh
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK"
+mkdir -p samples/common/HelloWorld/MS/OPEN-R/MW/OBJS
+make -C samples/common/HelloWorld/HelloWorld \
+  OPENRSDK_ROOT="$PWD/sdk/local/OPEN_R_SDK" \
+  install
+```
+
+That produces:
+
+- `samples/common/HelloWorld/MS/OPEN-R/MW/OBJS/HELLO.BIN`
+
+## Where To Look
+
+- [sdk/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/sdk/README.md) for Debian SDK setup
+- [simulator/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/simulator/README.md) for simulator scope and plan
+- [aperios/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/aperios/README.md) for OPEN-R/Aperios messaging notes
+
+## Rule
+
+Use a separate programmable Memory Stick, not your working AIBO MIND stick.
