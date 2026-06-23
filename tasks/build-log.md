@@ -22,6 +22,8 @@ Machine: current Debian host
   - `/home/cartheur`
 - `check-openr.sh` failed because `/usr/OPENR_SDK` does not exist
 - sample build failed because `/usr/local/OPEN_R_SDK/bin/mipsel-linux-g++` does not exist
+- `opt/AIBO7M2` and `opt/AIBO7M3` were later added and appear to be ERS-7 runtime Memory Stick dumps, not the host SDK/toolchain
+- the actual SDK source archives were later added under `sdk/`
 
 ### Concrete failing build output
 
@@ -38,6 +40,7 @@ make: *** [Makefile:37: HelloWorld.o] Error 127
   - `/usr/local/OPEN_R_SDK`
 - `scripts/check-openr.sh` now checks both the simple repo layout and the classic Sony `OPEN_R` layout
 - the top-level cribsheet already points to Sony `HelloWorld` as the first true build target
+- `sdk/README.md` now documents the local SDK archives and the DogsBody-based install flow
 
 ### Current blocker
 

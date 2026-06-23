@@ -1,0 +1,6 @@
+.DS_Store
+._*
+sdk/*.tar.gz
+sdk/*.tar.bz2
+sdk/*.tgz
+sdk/*.tbz
