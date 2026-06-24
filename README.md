@@ -77,6 +77,7 @@ That produces:
 - [features/ers7-wifi/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-wifi/README.md) for ERS-7 Wi-Fi setup from the bundled Sony docs
 - [features/aibo-mind2/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/aibo-mind2/README.md) for staging the bundled AIBO MIND 2 ERS-7 stick layout
 - [features/hello-world/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/hello-world/README.md) for a scratch-built ERS-7 Wi-Fi test stick
+- [features/ers7-runtime-base/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-runtime-base/README.md) for a runtime-system hybrid ERS-7 test stick
 
 ## Rule
 

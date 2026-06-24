@@ -14,6 +14,7 @@ Environment variables:
   SAMPLE_DIR      Sample root. Default: ./samples/common/HelloWorld
   FEATURE_SLUG    Feature output folder name. Default: derived from SAMPLE_DIR
   PAYLOAD_MODE    base-only, hello-only, or hello-plus-powermon. Default: hello-plus-powermon
+  SYSTEM_SOURCE   sdk, runtime-mind2, or runtime-mind3. Default: sdk
   STICK_FLAVOR    BASIC, WCONSOLE, or WLAN. Default: WCONSOLE
   MEMPROT         memprot or nomemprot. Default: memprot
   AIBO_HOSTNAME   Default: AIBO
@@ -40,6 +41,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OPENRSDK_ROOT="${OPENRSDK_ROOT:-$ROOT_DIR/sdk/local/OPEN_R_SDK}"
 SAMPLE_DIR="${SAMPLE_DIR:-$ROOT_DIR/samples/common/HelloWorld}"
 PAYLOAD_MODE="${PAYLOAD_MODE:-hello-plus-powermon}"
+SYSTEM_SOURCE="${SYSTEM_SOURCE:-sdk}"
 STICK_FLAVOR="${STICK_FLAVOR:-WCONSOLE}"
 MEMPROT="${MEMPROT:-memprot}"
 AIBO_HOSTNAME="${AIBO_HOSTNAME:-AIBO}"
@@ -69,6 +71,8 @@ BUILD_ROOT="$FEATURE_DIR/build"
 OUTPUT_DIR="${1:-$BUILD_ROOT/stick}"
 
 BASE_DIR="$OPENRSDK_ROOT/OPEN_R/MS_ERS7/$STICK_FLAVOR/$MEMPROT/OPEN-R"
+RUNTIME_MIND2_DIR="$ROOT_DIR/opt/AIBO7M2/OPEN-R"
+RUNTIME_MIND3_DIR="$ROOT_DIR/opt/AIBO7M3/OPEN-R"
 POWERMON_SAMPLE_DIR="$ROOT_DIR/samples/common/PowerMonitor"
 WORK_COMMON_DIR="$BUILD_ROOT/work/samples/common"
 SAMPLE_WORK_DIR="$WORK_COMMON_DIR/$SAMPLE_BASENAME"
@@ -93,6 +97,24 @@ case "$PAYLOAD_MODE" in
   base-only|hello-only|hello-plus-powermon) ;;
   *)
     echo "error: PAYLOAD_MODE must be base-only, hello-only, or hello-plus-powermon" >&2
+    exit 1
+    ;;
+esac
+
+case "$SYSTEM_SOURCE" in
+  sdk)
+    RUNTIME_OPENR_DIR=""
+    ;;
+  runtime-mind2)
+    RUNTIME_OPENR_DIR="$RUNTIME_MIND2_DIR"
+    require_file "$RUNTIME_OPENR_DIR/SYSTEM"
+    ;;
+  runtime-mind3)
+    RUNTIME_OPENR_DIR="$RUNTIME_MIND3_DIR"
+    require_file "$RUNTIME_OPENR_DIR/SYSTEM"
+    ;;
+  *)
+    echo "error: SYSTEM_SOURCE must be sdk, runtime-mind2, or runtime-mind3" >&2
     exit 1
     ;;
 esac
@@ -162,7 +184,21 @@ cp -a "$BASE_DIR" "$OUTPUT_DIR/OPEN-R"
 chmod -R u+w "$OUTPUT_DIR/OPEN-R"
 : > "$OUTPUT_DIR/MEMSTICK.IND"
 
-if [ "$STICK_FLAVOR" != "BASIC" ]; then
+if [ "$SYSTEM_SOURCE" != "sdk" ]; then
+  rm -rf "$OUTPUT_DIR/OPEN-R/SYSTEM"
+  cp -a "$RUNTIME_OPENR_DIR/SYSTEM" "$OUTPUT_DIR/OPEN-R/SYSTEM"
+  chmod -R u+w "$OUTPUT_DIR/OPEN-R/SYSTEM"
+
+  for root_item in APERINIT.GZ APERIOS.GZ BOOTPARA STIKSAFE.BIN; do
+    if [ -e "$RUNTIME_OPENR_DIR/$root_item" ]; then
+      cp -a "$RUNTIME_OPENR_DIR/$root_item" "$OUTPUT_DIR/OPEN-R/$root_item"
+    fi
+  done
+
+  rm -f "$OUTPUT_DIR/OPEN-R/VERSION.txt"
+fi
+
+if [ "$STICK_FLAVOR" != "BASIC" ] || [ -e "$OUTPUT_DIR/OPEN-R/SYSTEM/CONF/WLANCONF.TXT" ]; then
   cat > "$OUTPUT_DIR/OPEN-R/SYSTEM/CONF/WLANCONF.TXT" <<EOF
 HOSTNAME=$AIBO_HOSTNAME
 EOF
@@ -233,6 +269,7 @@ Sample: $SAMPLE_BASENAME
 Build root: $BUILD_ROOT
 Stick staging dir: $OUTPUT_DIR
 Payload mode: $PAYLOAD_MODE
+System source: $SYSTEM_SOURCE
 
 Copy these items to the root of the mounted Memory Stick:
 
@@ -259,6 +296,7 @@ SIZE_MIB="$(awk -v bytes="$SIZE_BYTES" 'BEGIN { printf "%.2f", bytes / (1024 * 1
 echo "Built ERS-7 test stick at: $OUTPUT_DIR"
 echo "Feature slug: $FEATURE_SLUG"
 echo "Feature build root: $BUILD_ROOT"
+echo "System source: $SYSTEM_SOURCE"
 echo "Flavor: $STICK_FLAVOR/$MEMPROT"
 echo "Wi-Fi: ESSID=$ESSID APMODE=$APMODE DHCP=$USE_DHCP WEP=$WEPENABLE"
 echo "Payload mode: $PAYLOAD_MODE"
