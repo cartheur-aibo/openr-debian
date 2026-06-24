@@ -76,6 +76,36 @@ gets narrower:
 - another hidden boot expectation outside the system object set
 - a deeper incompatibility between programming-stick boot and this robot
 
+## Result So Far
+
+Hardware test result:
+
+- correctly formatted 8 MB `FAT12` stick
+- runtime-derived `SYSTEM/` from `opt/AIBO7M2`
+- `BASIC` flavor
+- `base-only` payload
+- same failure sound and immediate shutdown sequence
+
+That means this hybrid stick did not solve the boot failure.
+
+## Conclusion So Far
+
+This result makes a few earlier suspects much less likely:
+
+- simple FAT formatting mistakes
+- missing `HelloWorld` or `PowerMonitor` payload files
+- using the SDK `SYSTEM/` stack instead of the real ERS-7 runtime `SYSTEM/`
+  stack
+
+The strongest remaining suspects are now:
+
+- this specific experimental 8 MB media is still not truly accepted by the
+  robot
+- there is another boot requirement outside the files we are currently
+  controlling
+- the robot expects a genuine Sony programming-stick preparation that is more
+  specific than the recreated workflow so far
+
 ## Useful Knowledge
 
 - The full `opt/AIBO7M2/OPEN-R` runtime dump is about `19.6 MB`, so it does
@@ -84,3 +114,6 @@ gets narrower:
 - The real ERS-7 system object set includes `RRWH.BIN`, `IPSTACK.BIN`,
   `NETCONFS.BIN`, `WLANDRV.BIN`, and `WLANENBL.BIN`, which differ from the
   minimal SDK base.
+- This repo already contains a local copy of the larger ERS-7 runtime image in
+  `opt/AIBO7M2/OPEN-R`, which corresponds to the bigger stick layout we have
+  been using as a reference.

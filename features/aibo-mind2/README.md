@@ -1,7 +1,10 @@
 # AIBO MIND 2 Memory Stick Setup
 
-This folder explains how to stage the bundled ERS-7 AIBO MIND 2 files in this
-repo so they can be copied onto a Memory Stick.
+This folder explains how to stage ERS-7 AIBO MIND 2 files so they can be
+copied onto a Memory Stick.
+
+If you have the actual known-good 32 MB stick, cloning from that mounted stick
+is better than trusting the bundled repo copy blindly.
 
 ## Important Size Limit
 
@@ -18,7 +21,24 @@ So the safe conclusion from the files currently in this repo is:
 - You cannot write this full setup to an 8 MB stick without trimming it.
 - I do not have evidence in this repo for a known-good trimmed 8 MB AIBO MIND 2 layout.
 
-## What This Repo Contains
+## Preferred Source
+
+If the real 32 MB AIBO MIND 2 stick is mounted read-only on this machine, use
+that as the source of truth.
+
+Example:
+
+```bash
+./scripts/stage-aibo-mind2.sh /tmp/ers7-real-stick
+```
+
+That copies the actual stick contents into:
+
+- `features/aibo-mind2/build/stick`
+
+so we have a local staged copy of what is really on the known-good media.
+
+## Bundled Repo Copy
 
 The ERS-7 AIBO MIND 2 files live here:
 
@@ -33,7 +53,13 @@ That tree already looks like a Memory Stick dump, including:
 
 ## Build A Staging Tree
 
-Use the included script:
+From the real mounted stick:
+
+```bash
+./scripts/stage-aibo-mind2.sh /tmp/ers7-real-stick
+```
+
+From the bundled repo copy:
 
 ```bash
 ./scripts/stage-aibo-mind2.sh
@@ -64,7 +90,7 @@ The staging script copies:
 - `PALM/`
 - `StikZap.prc`
 
-from [opt/AIBO7M2](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/opt/AIBO7M2).
+from whichever source directory you stage from.
 
 ## Why The 8 MB Stick Is A Problem
 

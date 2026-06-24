@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<root xmlns="urn:schemas-upnp-org:device-1-0">
+  <specVersion>
+    <major>1</major>
+    <minor>0</minor>
+  </specVersion>
+  <device>
+    <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType> 
+    <friendlyName>vriend</friendlyName> 
+    <manufacturer>Sony Corporation</manufacturer>
+    <manufacturerURL>http://www.sony.net/</manufacturerURL> 
+    <modelDescription>Sony Entertainment Robot AIBO</modelDescription> 
+    <modelName>ERS-7</modelName> 
+    <modelURL>http://www.aibo.com/</modelURL> 
+    <UDN>uuid:A1B000000000-1010-8000-0010C6-2473C9</UDN> 
+    <serviceList>
+      <service>
+        <serviceType>urn:schemas-sony-com:service:net-AIBO:1</serviceType>
+        <serviceId>urn:schemas-sony-com:serviceId:DummyService:1</serviceId>
+        <SCPDURL>dummy.xml</SCPDURL>
+        <controlURL>dummy_controlurl/</controlURL>
+        <eventSubURL>dummy_eventsurl/</eventSubURL>
+      </service>
+    </serviceList>
+    <presentationURL>INDEX.HTM</presentationURL>
+  </device>
+</root>

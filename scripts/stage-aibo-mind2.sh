@@ -3,30 +3,49 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-usage: stage-aibo-mind2.sh [/path/to/staging-dir]
+usage: stage-aibo-mind2.sh [source-stick-dir] [/path/to/staging-dir]
 
-Create a staged AIBO MIND 2 Memory Stick layout from the bundled ERS-7 dump.
+Create a staged AIBO MIND 2 Memory Stick layout from either:
+- the bundled ERS-7 dump in opt/AIBO7M2
+- a mounted real Memory Stick directory
+
 By default, build outputs live under features/aibo-mind2/.
 
 This copies:
-  opt/AIBO7M2/MEMSTICK.IND
-  opt/AIBO7M2/OPEN-R/
-  opt/AIBO7M2/PALM/
-  opt/AIBO7M2/StikZap.prc
+  <source>/MEMSTICK.IND
+  <source>/OPEN-R/
+  <source>/PALM/
+  <source>/StikZap.prc
 
 into the target directory so it can be written to a compatible Memory Stick.
 EOF
 }
 
-if [ "$#" -gt 1 ]; then
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+  usage
+  exit 0
+fi
+
+if [ "$#" -gt 2 ]; then
   usage
   exit 1
 fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_DIR="$ROOT_DIR/opt/AIBO7M2"
 FEATURE_DIR="$ROOT_DIR/features/aibo-mind2"
-TARGET_DIR="${1:-$FEATURE_DIR/build/stick}"
+BUNDLED_SOURCE_DIR="$ROOT_DIR/opt/AIBO7M2"
+
+if [ "$#" -ge 1 ]; then
+  SOURCE_DIR="$1"
+else
+  SOURCE_DIR="${SOURCE_DIR:-$BUNDLED_SOURCE_DIR}"
+fi
+
+if [ "$#" -ge 2 ]; then
+  TARGET_DIR="$2"
+else
+  TARGET_DIR="$FEATURE_DIR/build/stick"
+fi
 
 if [ ! -d "$SOURCE_DIR/OPEN-R" ]; then
   echo "error: source AIBO MIND 2 tree not found at $SOURCE_DIR" >&2
@@ -39,6 +58,9 @@ echo "Staging AIBO MIND 2 from:"
 echo "  $SOURCE_DIR"
 echo "to:"
 echo "  $TARGET_DIR"
+
+rm -rf "$TARGET_DIR"
+mkdir -p "$TARGET_DIR"
 
 cp -a "$SOURCE_DIR/MEMSTICK.IND" "$TARGET_DIR/"
 cp -a "$SOURCE_DIR/OPEN-R" "$TARGET_DIR/"

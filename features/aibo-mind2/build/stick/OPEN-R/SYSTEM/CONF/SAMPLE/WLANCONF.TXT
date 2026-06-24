@@ -1,0 +1,27 @@
+#
+# WLAN
+#
+HOSTNAME=AIBO
+ESSID=AIBONET
+WEPENABLE=1
+WEPKEY=AIBO2
+APMODE=1
+
+#
+# IP network
+#
+USE_DHCP=1
+#
+# If DHCP is not used (USE_DHCP=0), you need to specify IP 
+# network configuration. 
+#
+#USE_DHCP=0
+#ETHER_IP=192.168.0.100
+#ETHER_NETMASK=255.255.255.0
+#IP_GATEWAY=192.168.0.1
+#DNS_SERVER_1=192.168.0.1
+
+#
+# SSDP
+#
+SSDP_ENABLE=1
