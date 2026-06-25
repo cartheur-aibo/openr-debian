@@ -69,6 +69,34 @@ That produces:
 
 - `samples/common/HelloWorld/MS/OPEN-R/MW/OBJS/HELLO.BIN`
 
+## MIND 2 vs MIND 3
+
+In this repo, the preserved MIND 2 and MIND 3 stick trees share the same
+top-level Sony layout:
+
+- `MEMSTICK.IND`
+- `OPEN-R/`
+- `PALM/`
+
+The practical differences are:
+
+- MIND 2 is our smaller preserved baseline under
+  [features/aibo-mind2/build/stick](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/aibo-mind2/build/stick),
+  and it is the one we have already verified live on the real robot over Wi-Fi
+  and HTTP.
+- MIND 3 is preserved under
+  [opt/AIBO7M3](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/opt/AIBO7M3)
+  and is much larger in this repo, about `55M` versus about `20M` for the
+  staged MIND 2 tree.
+- The MIND 3 image carries extra stock content compared with the preserved
+  MIND 2 tree, including more Palm-side files plus additional app-facing
+  content such as `OPEN-R/APP/PC/DIARY`, `OPEN-R/APP/OBJS/SA.BIN`, and
+  `OPEN-R/APP/OBJS/STM.BIN`.
+- For repeatable testing, the repo now exposes both paths as separate staging
+  workflows: [features/ers7m2-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m2-test-stick/README.md)
+  for MIND 2 and [features/ers7m3-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m3-test-stick/README.md)
+  for MIND 3.
+
 ## Where To Look
 
 - [sdk/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/sdk/README.md) for Debian SDK setup
@@ -79,6 +107,7 @@ That produces:
 - [features/new-sticks-playbook/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/new-sticks-playbook/README.md) for the handoff workflow and proven conclusions for new 64 MB Sony sticks
 - [features/new-sticks-playbook/TROUBLESHOOTING.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/new-sticks-playbook/TROUBLESHOOTING.md) for the operational checklist and failure-triage guide during delicate stick bring-up
 - [features/ers7m2-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m2-test-stick/README.md) for the larger-stick full MIND 2 app-testing workflow
+- [features/ers7m3-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m3-test-stick/README.md) for the larger-stick full MIND 3 app-testing workflow
 - [features/ers7-camera-stream/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-camera-stream/README.md) for the ERS-7 `W3AIBO` camera-serving workflow on port `60080`
 - [features/hello-world/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/hello-world/README.md) for a scratch-built ERS-7 Wi-Fi test stick
 - [features/ers7-runtime-base/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-runtime-base/README.md) for a runtime-system hybrid ERS-7 test stick
