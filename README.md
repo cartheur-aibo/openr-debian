@@ -150,3 +150,4 @@ The practical differences are:
 ## Rule
 
 Use a separate programmable Memory Stick, not your working AIBO MIND stick.
+https://discord.gg/UKeCqAaK4d
