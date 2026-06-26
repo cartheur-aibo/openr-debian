@@ -2,30 +2,32 @@
 
 `Aperios` is Sony's embedded runtime environment for AIBO, while `OPEN-R` is the developer-facing object framework and API layer that AIBO applications are written against. The Sony docs and community material often blur those terms together, so this note uses both names to stay close to the original sources without claiming a sharper boundary than the manuals actually give us.
 
-## Included Documentation
+## Documentation
 
-_Official SDK documentation in `../docs/aperios/`._
+This section groups the local Sony OPEN-R manuals and companion AIBO papers by setup, APIs, hardware model, tutorials, simulation, and research focus.
 
-Setup and release notes:
+### Official SDK documentation in `../docs/aperios/`.
+
+_Setup and release notes:_
 
 - `../docs/aperios/InstallationGuide_E.pdf` - how to install and set up the Sony OPEN-R SDK toolchain and supporting packages
 - `../docs/aperios/Readme.md` - Sony's change log describing what changed between SDK document releases `1.1.4-r1` and `1.1.5-r1`
 
-Programming model and APIs:
+_Programming model and APIs:_
 
 - `../docs/aperios/ProgrammersGuide_E.pdf` - main conceptual guide to the OPEN-R object model, lifecycle, messaging, and application structure
 - `../docs/aperios/Level2ReferenceGuide_E.pdf` - API reference for lower-level OPEN-R interfaces beyond the introductory programming guide
 - `../docs/aperios/InternetProtocolVersion4_E.pdf` - reference for the OPEN-R IPv4 networking layer and how OPEN-R software uses network communication
 
-Model-specific reference:
+_Model-specific reference:_
 
 - `../docs/aperios/ModelInformation_7_E.pdf` - hardware and device-specific behavior notes for the ERS-7 platform, including timing and sensor details
 - `../docs/aperios/ModelInformation_210_E.pdf` - hardware and device-specific behavior notes for the ERS-210 platform
 - `../docs/aperios/ModelInformation_220_E.pdf` - hardware and device-specific behavior notes for the ERS-220 platform
 
-_Academic AIBO programming papers are in `../docs/papers/`._
+### Academic AIBO programming papers in `../docs/papers/`.
 
-Beginner programming tutorials:
+_Beginner programming tutorials:_
 
 - `../docs/papers/AIBO programming.pdf` - tutorial-style introduction to the AIBO programming environment and basic OPEN-R development
 - `../docs/papers/AIBO-quickstart.pdf` - quickstart guide covering SDK installation, Memory Stick setup, wireless networking, and first OPEN-R workflow steps
@@ -33,22 +35,22 @@ Beginner programming tutorials:
 - `../docs/papers/Introduction to programming environment.pdf` - introductory overview of the AIBO programming environment and how OPEN-R development is structured
 - `../docs/papers/tutorial_OPENR_ENSTA-1.0.pdf` - longer OPEN-R programming tutorial with practical examples, written for learners using the Sony SDK
 
-Simulation, tooling, and platform adaptation:
+_Simulation, tooling, and platform adaptation:_
 
 - `../docs/papers/opensdk08.pdf` - short paper on `openSDK`, an open-source OPEN-R implementation for simulation, debugging, and running AIBO code off-robot
 - `../docs/papers/ICC_2008-05-02.pdf` - technical report on adding camera functions to a Webots OPEN-R wrapper for AIBO robots
 
-Research and motion generation:
+_Research and motion generation:_
 
 - `../docs/papers/Kim_Kemilae.pdf` - thesis on generating and exporting motion sequences for the AIBO ERS-7 using a virtual robot and physics simulation
 
-General information and historical background:
+_General information and historical background:_
 
 - https://en.wikipedia.org/wiki/AIBO
 
-The public web is thin on Aperios internals. The Sony OPEN-R manuals are the only source of truth.
+Generally speaking, the public Internet is thin on Aperios internals. The Sony OPEN-R manuals are the only source of truth.
 
-## Documentation overview
+## Essentials overview
 
 ### 1. OPEN-R objects are single-threaded message processors
 
