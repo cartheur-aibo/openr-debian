@@ -1,4 +1,4 @@
-# OPEN-R / Aperios Notes
+# OPEN-R / Aperios
 
 `Aperios` is Sony's embedded runtime environment for AIBO, while `OPEN-R` is the developer-facing object framework and API layer that AIBO applications are written against. The Sony docs and community material often blur those terms together, so this note uses both names to stay close to the original sources without claiming a sharper boundary than the manuals actually give us.
 
