@@ -4,11 +4,24 @@
 
 ## Included Documentation
 
-Official SDK documentation are in `../docs/aperios/`:
+Official SDK documentation in `../docs/aperios/`:
 
-- `../docs/aperios/ProgrammersGuide_E.pdf`
-- `../docs/aperios/Level2ReferenceGuide_E.pdf`
-- `../docs/aperios/ModelInformation_7_E.pdf`
+Setup and release notes:
+
+- `../docs/aperios/InstallationGuide_E.pdf` - how to install and set up the Sony OPEN-R SDK toolchain and supporting packages
+- `../docs/aperios/Readme.md` - Sony's change log describing what changed between SDK document releases `1.1.4-r1` and `1.1.5-r1`
+
+Programming model and APIs:
+
+- `../docs/aperios/ProgrammersGuide_E.pdf` - main conceptual guide to the OPEN-R object model, lifecycle, messaging, and application structure
+- `../docs/aperios/Level2ReferenceGuide_E.pdf` - API reference for lower-level OPEN-R interfaces beyond the introductory programming guide
+- `../docs/aperios/InternetProtocolVersion4_E.pdf` - reference for the OPEN-R IPv4 networking layer and how OPEN-R software uses network communication
+
+Model-specific reference:
+
+- `../docs/aperios/ModelInformation_7_E.pdf` - hardware and device-specific behavior notes for the ERS-7 platform, including timing and sensor details
+- `../docs/aperios/ModelInformation_210_E.pdf` - hardware and device-specific behavior notes for the ERS-210 platform
+- `../docs/aperios/ModelInformation_220_E.pdf` - hardware and device-specific behavior notes for the ERS-220 platform
 
 Academic AIBO programming papers are in:
 
