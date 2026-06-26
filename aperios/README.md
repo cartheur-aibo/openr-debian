@@ -4,7 +4,7 @@
 
 ## Included Documentation
 
-Official SDK documentation in `../docs/aperios/`.
+_Official SDK documentation in `../docs/aperios/`._
 
 Setup and release notes:
 
@@ -23,7 +23,7 @@ Model-specific reference:
 - `../docs/aperios/ModelInformation_210_E.pdf` - hardware and device-specific behavior notes for the ERS-210 platform
 - `../docs/aperios/ModelInformation_220_E.pdf` - hardware and device-specific behavior notes for the ERS-220 platform
 
-Academic AIBO programming papers are in `../docs/papers/`.
+_Academic AIBO programming papers are in `../docs/papers/`._
 
 Beginner programming tutorials:
 
