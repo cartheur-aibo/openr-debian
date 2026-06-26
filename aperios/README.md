@@ -2,21 +2,25 @@
 
 This folder collects what we can say with confidence about the OPEN-R/Aperios execution model from the Sony SDK manuals we have locally, plus a small amount of public background.
 
-## Best Documentation We Have
+## Included Documentation
 
-Primary local sources:
+Primary local sources now live under `../docs/aperios/`:
 
-- `../sdk/work/OPEN_R_SDK-docE-1.1.5-r1/ProgrammersGuide_E.pdf`
-- `../sdk/work/OPEN_R_SDK-docE-1.1.5-r1/Level2ReferenceGuide_E.pdf`
-- `../sdk/work/OPEN_R_SDK-docE-1.1.5-r1/ModelInformation_7_E.pdf`
+- `../docs/aperios/ProgrammersGuide_E.pdf`
+- `../docs/aperios/Level2ReferenceGuide_E.pdf`
+- `../docs/aperios/ModelInformation_7_E.pdf`
+
+Academic AIBO programming papers are:
+
+- `../docs/papers/`
 
 Useful public background:
 
 - https://en.wikipedia.org/wiki/AIBO
 
-The public web is thin on Aperios internals. The Sony OPEN-R manuals are much stronger for the messaging model than anything public I found.
+The public web is thin on Aperios internals. The Sony OPEN-R manuals are the only source of truth.
 
-## What The Manuals Say
+## Documentation overview
 
 ### 1. OPEN-R objects are single-threaded message processors
 
