@@ -238,3 +238,40 @@ spec:
 - strip `.Spotlight-V100`, `.Trashes`, `._*`, `.DS_Store`, and similar host metadata from staged outputs
 - keep `opt/AIBO7M3` as the fuller preserved tree, but stage a stricter hardware-test variant separately
 - prefer the captured raw image over the repo tree when resolving authenticity questions about top-level contents
+
+## Genuine MIND 2 Stick
+
+We also captured a genuine ERS-7 MIND 2 stick separately from the smaller
+`CARTE` formatting-reference media.
+
+Its recorded details live in:
+
+- [mind2-reader-capture.txt](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-stick-forensics/mind2-reader-capture.txt)
+
+The important observed markers were:
+
+- `PALM/`
+- `OPEN-R/`
+- `MEMSTICK.IND`
+- `OPEN-R/BOOTPARA`
+- `OPEN-R/APP/VERSION`
+- `OPEN-R/MW/VERSION`
+- `OPEN-R/SYSTEM/VERSION`
+- `OPEN-R/SYSTEM/CONF/WLANCONF.TXT`
+
+And importantly, it did not show the MIND 3-only app markers:
+
+- `OPEN-R/APP/OBJS/SA.BIN`
+- `OPEN-R/APP/OBJS/STM.BIN`
+- `OPEN-R/APP/PC/DIARY`
+
+We preserved the raw image locally at:
+
+- `local-artifacts/sony-mind2-reference.img`
+- [sony-mind2-reference.img.sha256](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-stick-forensics/sony-mind2-reference.img.sha256)
+
+Recorded SHA-256:
+
+```text
+5247eabef3a3b797a8aaf7435d028b50b12b8764f8c097154bbf8f2115cfa8c1
+```

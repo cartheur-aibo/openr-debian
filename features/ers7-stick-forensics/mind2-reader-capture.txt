@@ -1,0 +1,86 @@
+Sony MIND 2 stick capture
+=========================
+
+Purpose
+-------
+
+Preserve the observed identity clues of a genuine ERS-7 AIBO MIND 2 Memory
+Stick and record where its raw image is stored locally.
+
+This stick is distinct from the smaller Sony-prepared `CARTE` reference media.
+Unlike `CARTE`, this one carries the full MIND 2 runtime and application tree.
+
+Host-visible identity
+---------------------
+
+Observed from the local environment:
+
+  device:            Sony MSAC-US40
+  disk sectors:      63424
+  partition start:   19
+  partition sectors: 63341
+  partition size:    about 30.9 MiB
+  mounted size:      about 23 MiB
+  filesystem:        vfat / FAT12-style Sony-era layout
+
+Mounted tree highlights
+-----------------------
+
+The following paths were observed on the mounted stick:
+
+  /tmp/mind2check/PALM
+  /tmp/mind2check/OPEN-R
+  /tmp/mind2check/MEMSTICK.IND
+  /tmp/mind2check/OPEN-R/APP/VERSION
+  /tmp/mind2check/OPEN-R/MW/VERSION
+  /tmp/mind2check/OPEN-R/SYSTEM/VERSION
+  /tmp/mind2check/OPEN-R/SYSTEM/CONF/WLANCONF.TXT
+  /tmp/mind2check/OPEN-R/SYSTEM/CONF/SAMPLE/WLANCONF.TXT
+  /tmp/mind2check/OPEN-R/BOOTPARA
+
+Important absent MIND 3 markers:
+
+  OPEN-R/APP/OBJS/SA.BIN
+  OPEN-R/APP/OBJS/STM.BIN
+  OPEN-R/APP/PC/DIARY
+
+Interpretation
+--------------
+
+This is a strong identity match for a real MIND 2 stick:
+
+  it has the expected MIND 2 top-level layout
+  it has the expected MIND 2 version and WLAN files
+  it lacks the distinguishing MIND 3-only app markers
+
+The geometry also matches the known-good 32 MB Sony/AIBO pattern:
+
+  start sector:      19
+  partition sectors: 63341
+
+So this stick is both:
+
+  a runtime/application reference for MIND 2 content
+  a strong Sony-era formatting reference for the 32 MB media class
+
+Recommended preservation command
+--------------------------------
+
+The captured raw image is stored locally at:
+
+  local-artifacts/sony-mind2-reference.img
+
+The checksum file remains in the repo at:
+
+  features/ers7-stick-forensics/sony-mind2-reference.img.sha256
+
+Recorded SHA-256:
+
+  5247eabef3a3b797a8aaf7435d028b50b12b8764f8c097154bbf8f2115cfa8c1
+
+When raw device access is available, save the full stick image before rewriting
+the media:
+
+  dd if=/dev/sdX of=local-artifacts/sony-mind2-reference.img bs=1M status=progress conv=fsync
+  sha256sum local-artifacts/sony-mind2-reference.img | tee features/ers7-stick-forensics/sony-mind2-reference.img.sha256
+  sync
