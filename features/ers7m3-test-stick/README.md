@@ -23,6 +23,13 @@ Run:
 ./scripts/prepare-ers7m3-test-stick.sh
 ```
 
+For a stricter AIBO-style staging tree that excludes Palm-side extras and
+automatically strips macOS host metadata:
+
+```bash
+STRICT_AIBO_LAYOUT=1 ./scripts/prepare-ers7m3-test-stick.sh
+```
+
 That creates:
 
 - `features/ers7m3-test-stick/build/stick`
@@ -43,6 +50,13 @@ The script copies from:
 
 which is the preserved MIND 3 stick tree in this repo.
 
+By default, staged output also strips common host-side junk such as:
+
+- `.Spotlight-V100`
+- `.Trashes`
+- `._*`
+- `.DS_Store`
+
 ## Copy To The Mounted Stick
 
 Once the Sony stick is mounted:
@@ -60,6 +74,7 @@ Then eject the stick cleanly before inserting it into the ERS-7.
   stick build
 - the default WLAN config matches the repo's proven `AIBONET` baseline so the
   network settings are easy to compare with the MIND 2 path
+- if you want the stricter captured-stick shape, set `STRICT_AIBO_LAYOUT=1`
 - if you want to preserve the stock MIND 3 WLAN file instead, override
   `WLANCONF_SOURCE`
 

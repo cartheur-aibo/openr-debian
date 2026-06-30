@@ -1,0 +1,165 @@
+Sony MIND 3-class stick capture
+===============================
+
+Purpose
+-------
+
+Preserve the observed identity clues of a larger Sony Memory Stick that was
+inserted in the `MSAC-US40` reader and appears to contain an ERS-7 MIND 3
+image.
+
+At the time of inspection, direct raw-device capture was not available from the
+agent environment, so this file records the verified filesystem-level evidence
+and the recommended host-side preservation command.
+
+Host-visible identity
+---------------------
+
+Observed from the local environment:
+
+  device:            Sony MSAC-US40
+  disk sectors:      253888
+  partition start:   33
+  partition sectors: 253407
+  partition size:    about 123.7 MiB
+  mounted size:      about 65 MiB
+  filesystem:        vfat
+
+Mounted tree highlights
+-----------------------
+
+The following paths were observed on the mounted stick:
+
+  /tmp/mind3check/OPEN-R
+  /tmp/mind3check/MEMSTICK.IND
+  /tmp/mind3check/OPEN-R/APP/PC/DIARY
+  /tmp/mind3check/OPEN-R/APP/OBJS/SA.BIN
+  /tmp/mind3check/OPEN-R/APP/OBJS/STM.BIN
+  /tmp/mind3check/OPEN-R/APP/VERSION
+  /tmp/mind3check/OPEN-R/BOOTPARA
+  /tmp/mind3check/OPEN-R/SYSTEM/VERSION
+  /tmp/mind3check/OPEN-R/MW/VERSION
+
+The top-level tree also included later Mac metadata:
+
+  /tmp/mind3check/.Spotlight-V100
+  /tmp/mind3check/.Trashes
+  /tmp/mind3check/._OPEN-R
+  many `._*` sidecar files under `OPEN-R/`
+
+Interpretation
+--------------
+
+This stick strongly matches the preserved ERS-7 MIND 3 tree in this repo,
+because the distinguishing MIND 3 content is present:
+
+  MEMSTICK.IND
+  OPEN-R/BOOTPARA
+  OPEN-R/APP/OBJS/SA.BIN
+  OPEN-R/APP/OBJS/STM.BIN
+  OPEN-R/APP/PC/DIARY
+
+The extra Mac metadata should be treated as later host-side clutter rather than
+part of the core Sony/AIBO image.
+
+This makes the stick worth preserving as a raw image before any cleanup or
+rewriting.
+
+Comparison Against `opt/AIBO7M3`
+--------------------------------
+
+We later compared the preserved raw image directly against the repo's
+`opt/AIBO7M3` tree.
+
+What matched strongly:
+
+  MEMSTICK.IND
+  OPEN-R/BOOTPARA
+  OPEN-R/INDEX.HTM
+  OPEN-R/APP/OBJS/SA.BIN
+  OPEN-R/APP/OBJS/STM.BIN
+  OPEN-R/APP/PC/DIARY
+  OPEN-R/SYSTEM/VERSION
+  OPEN-R/MW/VERSION
+
+The raw image is also structurally different from the 32 MB Sony reference
+stick:
+
+  disk image type: MBR with one active partition
+  filesystem type: FAT16
+  cluster size:    16384
+  partition start: 33 sectors
+
+Important differences from `opt/AIBO7M3`:
+
+  the raw image listing showed `MEMSTICK.IND` and `OPEN-R/`
+  it did not show `PALM/`
+  it did not show `StikZap.prc`
+  it contained extensive Mac metadata such as `.Spotlight-V100`, `.Trashes`,
+  and many `._*` AppleDouble sidecar files
+
+Working conclusion:
+
+  identity as a MIND 3-class runtime/app image: high confidence
+  identity as an exact match for repo `opt/AIBO7M3`: no
+  proof that this specific stick boots on the robot: not yet
+
+Recommended Changes To Bring `opt/AIBO7M3` Closer To Strict AIBO Stick Spec
+----------------------------------------------------------------------------
+
+For a stricter staging source that better reflects the preserved captured MIND
+3 image, the recommended changes are:
+
+  1. Add a "strict" staging mode that copies only `MEMSTICK.IND` and
+     `OPEN-R/` from `opt/AIBO7M3`, because the captured stick did not show
+     `PALM/` or `StikZap.prc`.
+
+  2. Strip host-side metadata during staging and preservation comparisons:
+     `.Spotlight-V100`, `.Trashes`, `._*`, `.DS_Store`, and similar clutter.
+
+  3. Keep `opt/AIBO7M3` as the fuller preserved repo tree, but add a separate
+     documented "strict-AIBO" output profile for hardware testing.
+
+  4. Prefer the captured raw image as the stronger source of truth for
+     filesystem layout and top-level contents when the goal is authenticity,
+     not convenience.
+
+  5. Validate whether Palm-side files are optional on real hardware before
+     treating their absence as an error. For now, they should be considered
+     non-essential to the captured MIND 3 stick identity.
+
+  6. Record the exact top-level file list and extracted file listing from the
+     raw image alongside future staging workflows, so drift from the preserved
+     stick is easy to detect.
+
+  7. If we later build a "strict" repo tree from the raw image, place it under
+     a separate feature or capture directory instead of mutating `opt/AIBO7M3`
+     in place.
+
+Recommended preservation command
+--------------------------------
+
+The captured raw image is stored locally at:
+
+  local-artifacts/sony-mind3-reference.img
+
+The checksum file remains in the repo at:
+
+  features/ers7-stick-forensics/sony-mind3-reference.img.sha256
+
+Recorded SHA-256:
+
+  5f5eb0948a69107a88a0dd6f6d0c039344add9ef4b2cbf2766404dd1ec5ec545
+
+Run on the host with direct block-device access:
+
+  umount /dev/sdX1
+  dd if=/dev/sdX of=local-artifacts/sony-mind3-reference.img bs=1M status=progress conv=fsync
+  sha256sum local-artifacts/sony-mind3-reference.img | tee features/ers7-stick-forensics/sony-mind3-reference.img.sha256
+  sync
+
+After capture, record:
+
+  image path
+  SHA-256 digest
+  whether the stick was mounted cleanly before imaging

@@ -14,3 +14,4 @@ samples/common/HelloWorld/HelloWorld/*.bin
 !samples/common/HelloWorld/MS/OPEN-R/MW/OBJS/HELLO.BIN
 aperios/hello-world-host
 features/*/build/
+local-artifacts/

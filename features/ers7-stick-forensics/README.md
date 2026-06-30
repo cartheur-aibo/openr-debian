@@ -159,3 +159,79 @@ sha256sum features/ers7-stick-forensics/sony-32mb-reference.img
 
 If the media is mounted, unmount it cleanly first so the filesystem is not
 captured in a dirty state.
+
+## Sony Larger-Capacity Reference Media: MIND 3-Class Stick
+
+We also inspected a larger Sony stick in the `MSAC-US40` reader that strongly
+matches the preserved ERS-7 MIND 3 tree in this repo.
+
+Its recorded details live in:
+
+- [mind3-reader-capture.txt](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-stick-forensics/mind3-reader-capture.txt)
+
+The important observed markers were:
+
+- `MEMSTICK.IND`
+- `OPEN-R/BOOTPARA`
+- `OPEN-R/APP/OBJS/SA.BIN`
+- `OPEN-R/APP/OBJS/STM.BIN`
+- `OPEN-R/APP/PC/DIARY`
+- `OPEN-R/APP/VERSION`
+- `OPEN-R/SYSTEM/VERSION`
+- `OPEN-R/MW/VERSION`
+
+This is the same feature combination that distinguishes the preserved
+[opt/AIBO7M3](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/opt/AIBO7M3)
+tree from the smaller MIND 2 image in this repo.
+
+The larger stick also carried later Mac-side metadata such as:
+
+- `.Spotlight-V100`
+- `.Trashes`
+- `._*` AppleDouble sidecar files
+
+Those should be treated as later host-side clutter, not as core MIND 3 runtime
+content.
+
+Recommended raw image target when direct host access is available:
+
+```bash
+dd if=/dev/sdX of=features/ers7-stick-forensics/sony-mind3-reference.img bs=1M status=progress
+sync
+sha256sum features/ers7-stick-forensics/sony-mind3-reference.img
+```
+
+We preserved the raw image of this larger MIND 3-class stick locally at:
+
+- `local-artifacts/sony-mind3-reference.img`
+- [sony-mind3-reference.img.sha256](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-stick-forensics/sony-mind3-reference.img.sha256)
+
+The image is intentionally kept out of normal Git history so the repo can push
+to GitHub without Git LFS.
+
+Recorded SHA-256:
+
+```text
+5f5eb0948a69107a88a0dd6f6d0c039344add9ef4b2cbf2766404dd1ec5ec545
+```
+
+Comparison against the repo's preserved MIND 3 tree showed:
+
+- strong agreement on the core `OPEN-R` MIND 3 identity markers
+- a larger-stick layout based on `FAT16` with partition start sector `33`
+- no visible `PALM/` or `StikZap.prc` in the captured raw image listing
+- significant later Mac metadata on the captured stick
+
+So the current best interpretation is:
+
+- the captured media is very likely a real MIND 3-class runtime/app stick
+- it is not an exact file-tree match for `opt/AIBO7M3`
+- bootability on the robot remains unproven until hardware test
+
+Recommended changes to bring `opt/AIBO7M3` closer to a stricter AIBO-stick
+spec:
+
+- add a strict staging mode that copies only `MEMSTICK.IND` and `OPEN-R/`
+- strip `.Spotlight-V100`, `.Trashes`, `._*`, `.DS_Store`, and similar host metadata from staged outputs
+- keep `opt/AIBO7M3` as the fuller preserved tree, but stage a stricter hardware-test variant separately
+- prefer the captured raw image over the repo tree when resolving authenticity questions about top-level contents
