@@ -1,0 +1,29 @@
+lsblk -o NAME,RM,SIZE,FSTYPE,LABEL,MOUNTPOINT
+mount | grep -E 'sdb|CARTE|media'
+cat /sys/class/block/sdb/device/vendor
+cat /sys/class/block/sdb/device/model
+cat /sys/class/block/sdb/size
+cat /sys/class/block/sdb1/start
+cat /sys/class/block/sdb1/size
+
+/sbin/fdisk -l /dev/sdb
+/sbin/fsck.fat -vn /dev/sdb1
+dd if=/dev/sdb bs=512 count=1 status=none | hexdump -C
+dd if=/dev/sdb bs=512 skip=19 count=1 status=none | hexdump -C
+find /media/cartheur/CARTE -maxdepth 3 | sed -n '1,200p'
+
+cd /home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian
+
+umount /media/cartheur/CARTE
+
+dd if=/dev/sdb of=features/ers7-stick-forensics/sony-32mb-reference-carte.img bs=1M status=progress conv=fsync
+
+sha256sum features/ers7-stick-forensics/sony-32mb-reference-carte.img | tee features/ers7-stick-forensics/sony-32mb-reference-carte.img.sha256
+
+sync
+
+ls -lh features/ers7-stick-forensics/sony-32mb-reference-carte.img*
+
+Quick sanity check after capture:
+cmp -n 32768 /dev/sdb features/ers7-stick-forensics/sony-32mb-reference-carte.img
+If cmp prints nothing, the first 32 KiB match.

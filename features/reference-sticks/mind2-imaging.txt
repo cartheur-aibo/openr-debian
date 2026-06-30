@@ -1,0 +1,17 @@
+mkdir -p /tmp/mind2check
+mount -o ro /dev/sdb1 /tmp/mind2check
+
+find /tmp/mind2check -maxdepth 3 | sed -n '1,200p'
+find /tmp/mind2check -maxdepth 5 \( -name 'MEMSTICK.IND' -o -name 'BOOTPARA' -o -name 'VERSION' -o -name 'WLANCONF.TXT' -o -name 'SA.BIN' -o -name 'STM.BIN' -o -path '*/APP/PC/DIARY' \) | sed -n '1,200p'
+du -sh /tmp/mind2check
+
+umount /dev/sdb1
+
+dd if=/dev/sdb of=local-artifacts/sony-mind2-reference.img bs=1M status=progress conv=fsync
+sha256sum local-artifacts/sony-mind2-reference.img | tee features/reference-sticks/sony-mind2-reference.img.sha256
+sync
+ls -lh local-artifacts/sony-mind2-reference.img features/reference-sticks/sony-mind2-reference.img.sha256
+
+If you want a quick sanity check after capture:
+cmp -n 32768 /dev/sdb local-artifacts/sony-mind2-reference.img
+If cmp prints nothing, the first 32 KiB match.

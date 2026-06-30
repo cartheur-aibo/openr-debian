@@ -72,7 +72,7 @@ The captured raw image is stored locally at:
 
 The checksum file remains in the repo at:
 
-  features/ers7-stick-forensics/sony-mind2-reference.img.sha256
+  features/reference-sticks/sony-mind2-reference.img.sha256
 
 Recorded SHA-256:
 
@@ -82,5 +82,5 @@ When raw device access is available, save the full stick image before rewriting
 the media:
 
   dd if=/dev/sdX of=local-artifacts/sony-mind2-reference.img bs=1M status=progress conv=fsync
-  sha256sum local-artifacts/sony-mind2-reference.img | tee features/ers7-stick-forensics/sony-mind2-reference.img.sha256
+  sha256sum local-artifacts/sony-mind2-reference.img | tee features/reference-sticks/sony-mind2-reference.img.sha256
   sync

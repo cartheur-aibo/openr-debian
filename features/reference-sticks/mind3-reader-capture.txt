@@ -145,7 +145,7 @@ The captured raw image is stored locally at:
 
 The checksum file remains in the repo at:
 
-  features/ers7-stick-forensics/sony-mind3-reference.img.sha256
+  features/reference-sticks/sony-mind3-reference.img.sha256
 
 Recorded SHA-256:
 
@@ -155,7 +155,7 @@ Run on the host with direct block-device access:
 
   umount /dev/sdX1
   dd if=/dev/sdX of=local-artifacts/sony-mind3-reference.img bs=1M status=progress conv=fsync
-  sha256sum local-artifacts/sony-mind3-reference.img | tee features/ers7-stick-forensics/sony-mind3-reference.img.sha256
+  sha256sum local-artifacts/sony-mind3-reference.img | tee features/reference-sticks/sony-mind3-reference.img.sha256
   sync
 
 After capture, record:

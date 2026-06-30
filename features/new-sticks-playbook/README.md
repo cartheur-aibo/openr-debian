@@ -73,10 +73,12 @@ When a future agent needs the best known inputs, start here:
   describes the larger-stick MIND 2 workflow
 - [features/ers7m3-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m3-test-stick/README.md)
   describes the larger-stick MIND 3 workflow
+- [features/reference-sticks/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/reference-sticks/README.md)
+  is the active baseline for preserved genuine MIND 2 and MIND 3 stick records
 - [features/ers7-camera-stream/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-camera-stream/README.md)
   describes the programmable camera-serving workflow
 - [features/ers7-stick-forensics/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7-stick-forensics/README.md)
-  captures why the 8 MB recreation path was deprioritized
+  captures the low-level background and why the 8 MB recreation path was deprioritized
 
 ## Phase 1: First Bring-Up On New Sticks
 
