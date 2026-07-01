@@ -115,6 +115,28 @@ The simulator is explicitly limited:
 \item it is used to expose candidate structure and rank live-hardware tests.
 \end{itemize}
 
+\subsection{WLAN Service Boundary}
+The current repo and recovered media also establish a useful boundary for
+network-facing work. On compatible ERS-7 WLAN configurations, the robot can
+expose live services including a wireless console in \texttt{WCONSOLE}, stock
+MIND 2 web content, and sample HTTP camera serving. In addition, decoded
+\texttt{MMFTP.CFG} content suggests bounded network-mediated content channels
+for specific payload families.
+
+Methodologically, this is important because it distinguishes two different
+claims:
+\begin{enumerate}[leftmargin=*]
+\item the running robot can expose observable and potentially interactive WLAN
+services;
+\item the full Sony Memory Stick payload can be rewritten freely in place over
+WLAN.
+\end{enumerate}
+
+The first claim is supported by current evidence. The second is not yet
+established. Accordingly, this work treats WLAN primarily as an observation,
+control, and service-interaction path rather than a proven general-purpose
+remote programming path for the retail stick.
+
 \subsection{Candidate Persistent-State Levers}
 Current analysis has focused on:
 \begin{itemize}[leftmargin=*]
@@ -255,6 +277,9 @@ trees and one especially valuable repaired specimen;
 tests confirm or refute them;
 \item some dynamic distinctions may reflect model choices rather than robot
 truth and must therefore be treated as hypotheses.
+\item current evidence supports live WLAN services and bounded content channels,
+but not a general claim of arbitrary in-place retail stick reprogramming over
+WLAN.
 \end{itemize}
 
 \section{Next Steps}

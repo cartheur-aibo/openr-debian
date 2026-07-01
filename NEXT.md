@@ -31,6 +31,27 @@ The current repo is furthest along on the second track.
 - four first-pass hardware trial trees are prepared under
   [trials](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/trials)
 
+## WLAN Programming Boundary
+
+The repo now supports a clearer boundary for remote work while the stick is in
+the robot:
+
+- MIND 2 and related OPEN-R layouts can expose live WLAN services
+- `WCONSOLE` exposes a wireless console on port `59000`
+- the stock MIND 2 environment serves web content on port `80`
+- the `W3AIBO` sample is designed to serve camera output on port `60080`
+- decoded `MMFTP.CFG` indicates bounded network-mediated content channels for
+  specific payload families rather than arbitrary filesystem access
+
+This means we should treat WLAN as a way to observe, control, and possibly feed
+specific service paths on a running robot, but not as an already-proven method
+for freely rewriting the full Sony Memory Stick payload in place.
+
+For the next research phase, that distinction matters: remote services may help
+us characterize runtime behavior and persistence, but stick programming and
+boot-payload changes should still be treated as separate deployment work unless
+we prove otherwise.
+
 ## Immediate Next Session Goal
 
 The next session should prioritize **live hardware validation**, not more
