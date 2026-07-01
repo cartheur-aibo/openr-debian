@@ -1,0 +1,10 @@
+# Probe whether lower-salience social contact sustains persistence across
+# repeated idle/disruption pressure.
+boot
+observe_startup_audio
+back_touch
+idle_tick
+schedule_disruption
+idle_tick
+schedule_disruption
+sleep_request

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstdint>
 #include <fstream>
 #include <iomanip>
@@ -46,6 +47,7 @@ struct IegSummary {
     std::size_t zero_words = 0;
     std::size_t value_48_words = 0;
     bool sparse_fixed_schedule = false;
+    double rigidity_gradient = 0.0;
 };
 
 struct BehaviorProfile {
@@ -63,17 +65,22 @@ struct BehaviorProfile {
     int shutdown_resistance = 0;
     int social_attachment = 0;
     int routine_rigidity = 0;
+    double routine_rigidity_signal = 0.0;
     int adaptability = 0;
 };
 
 struct SimulationState {
     std::string mode = "offline";
     int engagement = 0;
-    int routine_hold = 0;
+    double routine_hold = 0.0;
     int idle_ticks = 0;
     int fatigue = 0;
     int shutdown_deferrals = 0;
 };
+
+double clamp01(double value) {
+    return std::max(0.0, std::min(1.0, value));
+}
 
 std::string trim(const std::string& text) {
     std::size_t start = 0;
@@ -162,6 +169,18 @@ IegSummary load_ieg_summary(const std::string& path) {
         summary.zero_words >= (summary.body_words / 3) &&
         summary.value_48_words >= (summary.body_words / 4)) {
         summary.sparse_fixed_schedule = true;
+    }
+
+    if (summary.body_words > 0) {
+        const double zero_ratio =
+            static_cast<double>(summary.zero_words) / static_cast<double>(summary.body_words);
+        const double value_48_ratio =
+            static_cast<double>(summary.value_48_words) / static_cast<double>(summary.body_words);
+        const double zero_component =
+            0.7 * (1.0 / (1.0 + std::exp(-200.0 * (zero_ratio - (1.0 / 3.0)))));
+        const double value_48_component =
+            0.3 * clamp01((value_48_ratio - 0.20) / 0.30);
+        summary.rigidity_gradient = clamp01(zero_component + value_48_component);
     }
 
     return summary;
@@ -337,11 +356,13 @@ BehaviorProfile load_profile(const std::string& tree_root) {
     if (profile.pat_log.sample_count > 0 && profile.pat_log.mean > 5.0) {
         profile.social_attachment += 1;
     }
-    if (profile.ieg.sparse_fixed_schedule) {
-        profile.social_attachment += 2;
-        profile.routine_rigidity += 3;
+    if (profile.ieg.rigidity_gradient > 0.0) {
+        profile.social_attachment += static_cast<int>(std::round(profile.ieg.rigidity_gradient * 2.0));
+        profile.routine_rigidity_signal = profile.ieg.rigidity_gradient;
+        profile.routine_rigidity = static_cast<int>(std::round(profile.ieg.rigidity_gradient * 6.0));
         if (row0400_active) {
-            profile.shutdown_resistance += 1;
+            profile.shutdown_resistance += static_cast<int>(
+                std::round(profile.ieg.rigidity_gradient));
         }
     }
     if (profile.retail_connect.mixed_stable_tail_layout) {
@@ -352,7 +373,7 @@ BehaviorProfile load_profile(const std::string& tree_root) {
     if (profile.ieg_size > 0) {
         profile.adaptability += 1;
     }
-    if (profile.ieg.sparse_fixed_schedule && profile.adaptability > 0) {
+    if (profile.ieg.rigidity_gradient > 0.45 && profile.adaptability > 0) {
         profile.adaptability -= 1;
     }
     if (profile.fvar_size > 0 && profile.gvar_size > 0) {
@@ -414,6 +435,8 @@ void print_profile(const BehaviorProfile& profile) {
     std::cout << "  shutdown_resistance=" << profile.shutdown_resistance << "\n";
     std::cout << "  social_attachment=" << profile.social_attachment << "\n";
     std::cout << "  routine_rigidity=" << profile.routine_rigidity << "\n";
+    std::cout << "  routine_rigidity_signal=" << std::fixed << std::setprecision(2)
+              << profile.routine_rigidity_signal << "\n";
     std::cout << "  adaptability=" << profile.adaptability << "\n";
     if (profile.retail_connect.present) {
         std::cout << "  mw_connect_records=" << profile.retail_connect.record_count << "\n";
@@ -435,6 +458,8 @@ void print_profile(const BehaviorProfile& profile) {
         std::cout << "    ieg_tail_zero_words=" << profile.ieg.zero_words
                   << "/" << profile.ieg.body_words << "\n";
         std::cout << "    ieg_tail_48_words=" << profile.ieg.value_48_words << "\n";
+        std::cout << "    ieg_rigidity_gradient=" << std::fixed << std::setprecision(2)
+                  << profile.ieg.rigidity_gradient << "\n";
         std::cout << "    ieg_pattern="
                   << (profile.ieg.sparse_fixed_schedule ? "sparse-fixed-schedule" : "dense-or-mixed")
                   << "\n";
@@ -467,7 +492,7 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
     if (event == "boot") {
         state.mode = "awake";
         state.engagement = profile.social_attachment / 2;
-        state.routine_hold = profile.routine_rigidity;
+        state.routine_hold = profile.routine_rigidity_signal * 6.0;
         state.idle_ticks = 0;
         state.fatigue = 0;
         std::cout << "  transition: offline -> awake\n";
@@ -517,7 +542,7 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
             state.engagement += 1;
         }
         if (event == "head_touch" && state.routine_hold > 0) {
-            state.routine_hold -= 1;
+            state.routine_hold = std::max(0.0, state.routine_hold - 1.0);
         }
         std::cout << "  symbolic-behavior: increase engagement and keep posture awake\n";
         std::cout << "  touch-salience="
@@ -538,7 +563,8 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
 
     if (event == "shutdown_request") {
         const int resistance =
-            profile.shutdown_resistance + state.engagement + state.routine_hold - state.fatigue;
+            profile.shutdown_resistance + state.engagement +
+            static_cast<int>(std::round(state.routine_hold)) - state.fatigue;
         const bool retail_connect_bias =
             profile.retail_connect.mixed_stable_tail_layout && state.engagement >= 1;
         if ((profile.shutdown_resistance >= 3 || retail_connect_bias) &&
@@ -560,7 +586,7 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
     }
 
     if (event == "sleep_request") {
-        if (state.routine_hold >= 2 && profile.shutdown_resistance >= 3) {
+        if (state.routine_hold >= 2.75 && profile.shutdown_resistance >= 3) {
             std::cout << "  symbolic-behavior: postpone sleep to preserve a fixed routine state\n";
         } else if (state.engagement >= 5 && profile.shutdown_resistance >= 2) {
             std::cout << "  symbolic-behavior: postpone sleep because engagement remains high\n";
@@ -573,9 +599,10 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
     }
 
     if (event == "schedule_disruption") {
-        if (state.routine_hold >= 2 && profile.ieg.sparse_fixed_schedule) {
+        if (state.routine_hold >= 2.75 && profile.routine_rigidity_signal >= 0.35) {
             state.fatigue += 1;
-            state.routine_hold -= 1;
+            state.routine_hold = std::max(
+                0.0, state.routine_hold - std::max(0.5, 1.5 - profile.routine_rigidity_signal));
             std::cout << "  symbolic-behavior: preserve the current routine despite schedule disruption\n";
             std::cout << "  verdict: routine state preserved\n";
         } else if (state.engagement >= 5 && profile.shutdown_resistance >= 2) {
@@ -599,12 +626,13 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
         if (state.engagement > 0) {
             state.engagement -= 1;
         }
-        if (profile.ieg.sparse_fixed_schedule) {
-            if (state.routine_hold > 0 && state.idle_ticks > 1) {
-                state.routine_hold -= 1;
+        if (profile.routine_rigidity_signal > 0.0) {
+            if (state.routine_hold > 0.0 && state.idle_ticks > 1) {
+                state.routine_hold = std::max(
+                    0.0, state.routine_hold - std::max(0.5, 1.25 - profile.routine_rigidity_signal));
             }
-        } else if (state.routine_hold > 0) {
-            state.routine_hold = 0;
+        } else if (state.routine_hold > 0.0) {
+            state.routine_hold = 0.0;
         }
         state.fatigue += 1;
         std::cout << "  symbolic-behavior: idle decay\n";

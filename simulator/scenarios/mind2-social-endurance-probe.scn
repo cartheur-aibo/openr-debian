@@ -1,0 +1,10 @@
+# Probe whether social persistence survives repeated idle/disruption pressure
+# after a strong socially salient cue.
+boot
+observe_startup_audio
+head_touch
+idle_tick
+schedule_disruption
+idle_tick
+schedule_disruption
+sleep_request

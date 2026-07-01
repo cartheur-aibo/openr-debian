@@ -1,0 +1,8 @@
+# Probe whether routine preservation survives repeated idle/disruption pressure.
+boot
+observe_startup_audio
+idle_tick
+schedule_disruption
+idle_tick
+schedule_disruption
+sleep_request

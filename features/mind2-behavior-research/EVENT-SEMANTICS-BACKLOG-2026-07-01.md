@@ -195,12 +195,44 @@ Differentiate between general contact and socially salient interaction.
 
 ## Recommended Next Order
 
-1. Re-run:
+1. Extend the routine probe family with multi-cycle pressure.
+2. Re-run:
    - `0400 + 1200`
    - `0400 + IEG.CFG`
    - `0400` only
-   on the shutdown, fatigue, default, routine-sleep, and
-   routine-disruption probes, plus the social-disruption and low-salience
-   disruption probes, plus the neutral-disruption probe.
-2. Decide whether the next gain comes from more event types or from
+   - `IEG` threshold-window variants
+   on the shutdown, fatigue, default, routine-sleep, routine-disruption,
+   routine-endurance, social-disruption, low-salience disruption, and
+   neutral-disruption probes.
+3. Decide whether the next gain comes from more event types or from
    deeper file semantics.
+
+### Current Addendum
+
+- `mind2-routine-endurance-probe.scn` now provides the first useful
+  multi-cycle routine-pressure scenario.
+- under the graded `IEG` model it exposes:
+  - strong routine preservation
+  - transitional one-cycle preservation
+  - weak/no routine preservation
+- this is the clearest current dynamic argument for keeping the gradient model
+  instead of the earlier pure hard classifier.
+- `mind2-social-endurance-probe.scn` and
+  `mind2-low-salience-endurance-probe.scn` now extend that same idea to the
+  social side.
+- current multi-cycle distinction:
+  - `0400 + 1200`
+    - shows one-cycle social persistence after `head_touch`
+    - but fails by the second disruption and sleeps
+    - collapses immediately under the lower-salience endurance probe
+  - `0400 + IEG.CFG`
+    - preserves routine across both high- and low-salience endurance probes
+  - transitional `IEG` variants like `61` restored cells
+    - can preserve one cycle
+    - but fail on the second cycle
+
+This is the clearest current dynamic separation between:
+
+- socially cued persistence
+- routine persistence
+- transitional routine strength
