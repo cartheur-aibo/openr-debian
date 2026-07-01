@@ -371,6 +371,46 @@ This is the clearest current time-based separation in the repo:
 That is a much stronger dynamic distinction than the earlier single-event
 shutdown/sleep probes could provide.
 
+## Follow-On Social Tuning
+
+The next question was whether the `1200` path could support a stronger dynamic
+social persistence family without collapsing into the routine-preserving one.
+
+The simulator now carries a separate social-side state:
+
+- `social_persistence_signal`
+- runtime `social_hold`
+
+This allows social persistence to decay on its own timescale instead of being
+represented only by raw engagement.
+
+## Current Tuned `1200` Result
+
+With that social-carry state in place:
+
+- `0400 + 1200` under `mind2-social-endurance-probe.scn`
+  - first disruption: `seek interaction rather than preserve routine`
+  - second disruption: `seek interaction rather than preserve routine`
+  - final state: still sleeps
+- `0400 + 1200` under `mind2-low-salience-endurance-probe.scn`
+  - first disruption: `seek interaction rather than preserve routine`
+  - second disruption: `routine broken`
+  - final state: sleep
+
+So `1200` can now perform a stronger feat than before:
+
+- it sustains two cycles of socially cued persistence after a strong
+  high-salience cue
+
+But it still stays distinct from the routine family because:
+
+- it does not postpone the final sleep transition in the endurance pass
+- it remains salience-sensitive
+- it does not preserve routine semantics
+
+This is a better dynamic reading of `1200` than the earlier one-cycle-only
+model.
+
 ## Current Simulator Use
 
 The simulator now treats that sparse repeated-tail pattern as a narrow current

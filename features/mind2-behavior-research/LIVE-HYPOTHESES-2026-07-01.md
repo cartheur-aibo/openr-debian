@@ -161,6 +161,10 @@ Run each with:
 - one touch-engaged shutdown/sleep observation
 - one no-touch routine-disruption observation if practical
 
+The newer dynamic bench matrix is tracked separately here:
+
+- [LIVE-HARDWARE-MATRIX-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/LIVE-HARDWARE-MATRIX-2026-07-01.md)
+
 ## What Would Falsify The Current Model
 
 Examples:

@@ -23,7 +23,7 @@ It focuses on multi-cycle probes rather than one-step verdicts.
 | Probe | baseline | `0400` | `0400 + 1200` | `0400 + IEG` | `IEG transitional 61` |
 | --- | --- | --- | --- | --- | --- |
 | `mind2-routine-endurance-probe.scn` | routine broken twice, sleep | routine broken twice, sleep | routine broken twice, sleep | preserves both cycles, stays awake | preserves first cycle, breaks second, sleep |
-| `mind2-social-endurance-probe.scn` | routine broken twice, sleep | routine broken twice, sleep | social persistence once, then breaks, sleep | preserves both cycles, stays awake | social redirection once, then breaks, sleep |
+| `mind2-social-endurance-probe.scn` | routine broken twice, sleep | routine broken twice, sleep | social persistence twice, then sleep | preserves both cycles, stays awake | social redirection once, then breaks, sleep |
 | `mind2-low-salience-endurance-probe.scn` | routine broken twice, sleep | routine broken twice, sleep | breaks immediately, sleep | preserves both cycles, stays awake | preserves first cycle, breaks second, sleep |
 
 ## Current Reading
@@ -33,7 +33,8 @@ It focuses on multi-cycle probes rather than one-step verdicts.
 - expresses a social persistence family, not a routine-preserving family
 - strongest after high-salience `head_touch`
 - weaker or absent under lower-salience input
-- currently persists for one cycle, not multiple cycles
+- can now sustain two social-redirection cycles after a strong high-salience cue
+- still collapses sooner under lower-salience input
 
 ### specimen-side `IEG.CFG`
 
@@ -54,7 +55,7 @@ single-event probes:
 
 1. `1200`
    - socially cued
-   - short-lived
+   - multi-step under high salience, shorter-lived under lower salience
    - salience-sensitive
 2. strong specimen-side `IEG.CFG`
    - routine-preserving

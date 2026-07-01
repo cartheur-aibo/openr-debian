@@ -23,7 +23,9 @@ Use one copy of this note per live-hardware observation session.
 - shutdown sequence:
 - resistance to power-off:
 - wake/sleep behavior:
+- did persistence survive a second cycle:
 - touch response:
+- did outcome differ by cue salience:
 - voice/sound response:
 - movement style:
 - social or routine-like behavior:

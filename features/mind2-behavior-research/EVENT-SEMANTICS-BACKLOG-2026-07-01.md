@@ -222,9 +222,9 @@ Differentiate between general contact and socially salient interaction.
   social side.
 - current multi-cycle distinction:
   - `0400 + 1200`
-    - shows one-cycle social persistence after `head_touch`
-    - but fails by the second disruption and sleeps
-    - collapses immediately under the lower-salience endurance probe
+    - now shows two social-redirection cycles after `head_touch`
+    - still sleeps at the end of the endurance pass
+    - weakens sooner under the lower-salience endurance probe
   - `0400 + IEG.CFG`
     - preserves routine across both high- and low-salience endurance probes
   - transitional `IEG` variants like `61` restored cells

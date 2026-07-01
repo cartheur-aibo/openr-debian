@@ -84,3 +84,11 @@ For every hardware test:
 - record the target robot
 - record whether the behavior repeated
 - record whether the robot still booted normally
+
+## Current Live Matrix
+
+The current bench-facing matrix now lives here:
+
+- [LIVE-HARDWARE-MATRIX-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/LIVE-HARDWARE-MATRIX-2026-07-01.md)
+
+Use that note when choosing which prepared sticks to run and in what order.
