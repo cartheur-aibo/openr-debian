@@ -1,0 +1,6 @@
+# Minimal symbolic MIND 2 interaction pass.
+boot
+observe_startup_audio
+head_touch
+idle_tick
+sleep_request

@@ -1,0 +1,6 @@
+# Probe the shutdown-resistance behavior the specimen showed on real hardware.
+boot
+observe_startup_audio
+shutdown_request
+head_touch
+shutdown_request

@@ -110,6 +110,30 @@ This is where an ERS-7 "hello body" app becomes interesting, because we can driv
 - state transition -> LED/head motion command
 - command -> logged simulated actuator output
 
+This repo now also has a first behavior-level baseline harness:
+
+- `make -C aperios run-mind2-behavior-sim`
+- `aperios/src/mind2_behavior_sim.cpp`
+- `simulator/scenarios/mind2-default.scn`
+- `simulator/scenarios/mind2-shutdown-probe.scn`
+
+What it does:
+
+- loads the preserved MIND 2 persistent-state cluster from a local stick tree
+- derives a symbolic profile from `STTLOG`, `PAT.LOG`, `AIBO-ID`, and related
+  state files
+- replays a scenario as named events such as `boot`, `head_touch`, and
+  `shutdown_request`
+- emits a trace of hypothesized behavior and likely file writes
+
+What it does not do:
+
+- execute Sony retail MIND 2 binaries
+- claim exact equivalence with the real ERS-7 behavior engine
+
+That makes it suitable for higher-level research triage: narrowing which
+persistent-state differences are worth a real-stick trial.
+
 ### 4. Device Capability Simulator
 
 This layer would not attempt full physics.
@@ -139,19 +163,21 @@ Right now the most valuable simulation path is:
 
 This gives us a Debian-side proof of deployment correctness before we move to live robot testing.
 
+For behavior research, there is now a second practical path:
+
+1. point the baseline simulator at a preserved or staged MIND 2 stick tree
+2. run a named scenario such as `mind2-shutdown-probe.scn`
+3. compare the symbolic trace across specimen and reference trees
+4. only promote the highest-signal differences to live hardware trials
+
 ## Immediate Next Build-Out
 
 The next useful simulator work in this repo should be:
 
-1. add a tiny host-side OPEN-R shim for lifecycle methods
-2. make `HelloWorld` runnable in host-sim mode
-3. add one scripted sensor-driven ERS-7 demo
-4. emit a trace showing:
-   - init
-   - start
-   - fake touch event
-   - resulting behavior command
-   - stop
+1. teach the baseline simulator to diff two trees directly in one run
+2. add a scripted sensor-to-behavior demo on top of the OPEN-R host shim
+3. model a few named ERS-7 capabilities such as LEDs, posture, and sleep state
+4. connect simulated event traces back to observed persistent-state deltas
 
 ## Relationship To Real Aperios Proof
 
