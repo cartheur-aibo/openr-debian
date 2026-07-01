@@ -117,6 +117,42 @@ This calibration also matters on the stronger baseline side:
 So the current heuristic no longer lets specimen `IEG.CFG` act as a
 standalone shutdown-deferral trigger on its own.
 
+## Alternate Scenario Comparison
+
+The calibrated `IEG.CFG` bridge path was then compared directly with the
+current `1200` bridge path on the lean packaged MIND 2 baseline.
+
+### Older Shutdown Probe
+
+Both paths now defer the first shutdown request:
+
+- `0400 + 1200`
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+- `0400 + IEG.CFG`
+  - `shutdown_resistance=4`
+  - `social_attachment=7`
+
+So the present distinction is not in the top-line outcome there, but in the
+profile shape:
+
+- `1200` is the more social-weighted bridge
+- `IEG.CFG` is the more shutdown-rigidity-weighted bridge
+
+### Default Sleep Pass
+
+Under `mind2-default.scn`, the same distinction persists:
+
+- lean packaged baseline enters sleep
+- `0400` only still enters sleep
+- `0400 + 1200` postpones sleep
+- `0400 + IEG.CFG` also postpones sleep
+
+Again, the top-line outcome aligns, but the profile shape stays different:
+
+- `1200`: higher social attachment
+- `IEG.CFG`: higher shutdown resistance and lower adaptability
+
 ## Current Interpretation Boundary
 
 This is **not** proof that Sony's real runtime treats `IEG.CFG` this way.
@@ -128,6 +164,8 @@ It is a narrower statement:
   shutdown verdict when paired with specimen `0400`
 - the current calibrated heuristic keeps `IEG.CFG` as a companion bridge signal
   rather than a standalone shutdown pivot
+- the current bridge role overlaps with `1200` at the outcome level, but is
+  still distinguishable in profile shape
 - this breaks the earlier simulator-side boundary where the bridge seemed to
   live only inside the currently modeled `STTLOG` row set
 

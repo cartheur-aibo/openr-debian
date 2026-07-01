@@ -572,3 +572,60 @@ So the present calibrated `IEG.CFG` role is:
 - not a standalone shutdown pivot
 - but a companion bridge signal that can help `0400` cross the verdict boundary
   on lean baselines
+
+## Alternate Scenario Comparison
+
+The next check compared the two current bridge paths:
+
+- specimen `0400 + 1200`
+- specimen `0400 + IEG.CFG`
+
+against the lean packaged MIND 2 baseline under two additional scenarios:
+
+1. `mind2-shutdown-probe.scn`
+2. `mind2-default.scn`
+
+### Older Shutdown Probe
+
+Under `mind2-shutdown-probe.scn`, both bridge paths now defer the first
+shutdown request:
+
+- `0400 + 1200`
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+  - first shutdown request deferred once
+- `0400 + IEG.CFG`
+  - `shutdown_resistance=4`
+  - `social_attachment=7`
+  - first shutdown request deferred once
+
+So the outcome matches, but the profile shape differs:
+
+- `1200` expresses more as social/engagement weight
+- `IEG.CFG` expresses more as shutdown-side rigidity
+
+### Default Sleep-Oriented Pass
+
+Under `mind2-default.scn`, the same split persists:
+
+- lean packaged baseline:
+  - enters sleep
+- `0400 + 1200`
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+  - postpones sleep
+- `0400 + IEG.CFG`
+  - `shutdown_resistance=4`
+  - `social_attachment=7`
+  - postpones sleep
+- `0400` only:
+  - `shutdown_resistance=3`
+  - `social_attachment=5`
+  - still enters sleep
+
+This strengthens the current reading:
+
+- `1200` and calibrated `IEG.CFG` are both viable current bridge signals
+- but they are not identical
+- `1200` is the more social-weighted bridge
+- `IEG.CFG` is the more rigidity/resistance-weighted bridge

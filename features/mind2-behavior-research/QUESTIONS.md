@@ -58,6 +58,9 @@
     still does not?
 21. After calibration, does `IEG.CFG` remain a companion bridge signal rather
     than becoming a standalone shutdown trigger on stronger baselines?
+22. Are `1200` and calibrated `IEG.CFG` genuinely parallel bridge signals, or
+    do alternate scenarios show a stable difference between social-weighted and
+    rigidity-weighted bridge paths?
 
 ## Experimental Questions
 
