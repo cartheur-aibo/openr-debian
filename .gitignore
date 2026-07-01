@@ -16,3 +16,7 @@ aperios/hello-world-host
 aperios/mind2-behavior-sim
 features/*/build/
 local-artifacts/
+# LaTeX build byproducts
+paper/*.aux
+paper/*.log
+paper/*.out

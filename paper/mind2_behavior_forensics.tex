@@ -1,0 +1,282 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{Toward Behavioral Forensics of AIBO ERS-7 MIND 2:\\
+Recovery, Preservation, and Hypothesis-Driven Modeling of Persistent State}
+\author{Draft Manuscript}
+\date{July 1, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper reports a practical research program for studying higher-order
+behavior in Sony AIBO ERS-7 MIND 2 systems from preserved Memory Stick state.
+The work begins with forensic recovery of a non-booting Sony-formatted stick,
+establishes a reproducible restoration and preservation workflow, and then
+pivots into behavior forensics over persistent application state. We describe a
+host-side MIND 2 behavior simulator used as a hypothesis engine, identify
+candidate persistent-state levers including \texttt{STTLOG} row \texttt{0400},
+\texttt{STTLOG} row \texttt{1200}, and specimen-side \texttt{IEG.CFG}, and
+show that these levers support distinct behavioral interpretations under a
+growing family of probe scenarios. The current evidence suggests that
+\texttt{0400} acts as a shutdown-side pivot, \texttt{1200} expresses
+socially-cued persistence, and specimen-side \texttt{IEG.CFG} expresses a more
+routine-preserving and multi-cycle persistence family. The contribution is not
+a claim of decoded Sony internal logic, but a reproducible methodology that
+links filesystem forensics, preserved media, host-side simulation, and live
+hardware testing.
+\end{abstract}
+
+\section{Introduction}
+Behavior in legacy autonomous robots is often treated as opaque runtime magic,
+especially when vendor tooling and source-level documentation are incomplete or
+when deployed systems survive only as preserved media. For the Sony AIBO ERS-7
+MIND 2 platform, this creates a two-part challenge. First, one must preserve
+and recover genuine bootable media accurately. Second, one must determine
+whether higher-order behavioral differences are represented in persistent state
+strongly enough to be isolated, transferred, and studied.
+
+This paper presents the current state of an open research effort addressing
+both problems in sequence. The first milestone established that a Sony-formatted
+32 MB class stick associated with an ERS-7 startup failure could be repaired by
+restoring a valid MIND 2 payload while preserving the underlying Sony media
+format. The second phase treated the repaired, working image as a behavioral
+specimen and developed a hypothesis-driven analysis loop over persistent files,
+transplanted state trees, and host-side simulated probe scenarios.
+
+\section{Research Goals}
+The work reported here is driven by three goals:
+\begin{enumerate}[leftmargin=*]
+\item preserve accurate knowledge of genuine ERS-7 MIND 2 media and recovery;
+\item identify which persistent files may encode behaviorally meaningful state;
+\item build a reproducible path from preserved state to live-hardware
+interpretation.
+\end{enumerate}
+
+The central research question is:
+
+\begin{quote}
+Where do higher-order MIND 2 behaviors live in persistent stick state, and to
+what extent are those behaviors reproducible?
+\end{quote}
+
+\section{Recovered Specimen and Preservation Milestone}
+The first major result was the repair and preservation of a Sony-formatted MIND
+2 stick associated with a live ERS-7 startup failure. The forensic session
+established four points:
+\begin{enumerate}[leftmargin=*]
+\item the captured medium had correct Sony 32 MB class low-level formatting;
+\item the captured stick was non-bootable because it lacked
+\texttt{MEMSTICK.IND} and a complete \texttt{OPEN-R/} payload tree;
+\item restoring the MIND 2 payload onto that Sony-formatted medium produced a
+stick that booted successfully on real hardware;
+\item the repaired working stick was preserved as a new raw image for later
+study.
+\end{enumerate}
+
+This matters methodologically because it separates media-format questions from
+payload-state questions. The subsequent behavior work is grounded in a specimen
+that is both preserved and known to boot.
+
+\section{Methodology}
+\subsection{Behavior Forensics Workflow}
+The current workflow follows an observe--map--test loop:
+\begin{enumerate}[leftmargin=*]
+\item observe a live behavior carefully and record it with a stable template;
+\item map candidate behavioral differences to persistent files and file groups;
+\item create one-variable test trees and compare their outcomes.
+\end{enumerate}
+
+The preserved specimen image is held constant as the primary reference point.
+Candidate state changes are staged into sacrificial trees or test media rather
+than altering the preserved baseline.
+
+\subsection{Host-Side Simulator}
+Because direct robot testing is slow and expensive, a host-side MIND 2
+behavior simulator was built as a hypothesis engine rather than a retail
+binary emulator. The simulator reads preserved persistent state, derives a
+symbolic behavior profile, and replays probe scenarios such as boot,
+interaction, disruption, shutdown, and sleep requests.
+
+The simulator is explicitly limited:
+\begin{itemize}[leftmargin=*]
+\item it does not execute Sony retail binaries;
+\item it is not evidence of exact Sony internal implementation;
+\item it is used to expose candidate structure and rank live-hardware tests.
+\end{itemize}
+
+\subsection{Candidate Persistent-State Levers}
+Current analysis has focused on:
+\begin{itemize}[leftmargin=*]
+\item \texttt{STTLOG} rows, especially \texttt{0400} and \texttt{1200};
+\item \texttt{IEG.CFG} as a structured behavioral state file;
+\item supporting state files including \texttt{PAT.LOG}, \texttt{FVAR},
+\texttt{GVAR}, \texttt{AWAKING.CFG}, and \texttt{SIDRDATA.BIN}.
+\end{itemize}
+
+\section{Current Findings}
+\subsection{\texttt{0400} as a Shutdown Pivot}
+The strongest current conclusion about \texttt{STTLOG} is that row
+\texttt{0400} acts as the dominant shutdown-side pivot in the host-side model.
+It does not explain all behavior by itself, but it is the clearest single
+lever for differentiating immediate compliance from resistance-oriented state.
+
+\subsection{\texttt{1200} as a Social Persistence Signal}
+Row \texttt{1200} currently behaves less like a routine-preserving lever and
+more like a socially-cued bridge signal. Under probe scenarios involving
+high-salience interaction, it expresses short-lived but meaningful persistence.
+With later tuning, the model was able to sustain two cycles of social
+redirection after a strong cue while remaining weaker under lower-salience
+interaction.
+
+\subsection{Specimen-Side \texttt{IEG.CFG} as a Routine-Preserving Signal}
+\texttt{IEG.CFG} emerged as the strongest non-\texttt{STTLOG} behavioral
+candidate. The current specimen-side file differs sharply from the bundled
+baseline despite sharing the same size and \texttt{IEPR} header. When the body
+after offset \texttt{0x40} is treated as a structured grid, the baseline file
+has mixed non-zero values while the specimen-side file is dominated by
+repeated \texttt{48.0 + 0} cells and contains a long contiguous zero-second run.
+
+This provided the structural basis for modeling \texttt{IEG.CFG} not as a
+simple boolean presence, but as a routine-rigidity signal whose strength can be
+varied by partial restoration.
+
+\section{From Hard Classifier to Gradient Model}
+The first \texttt{IEG.CFG} heuristic used a hard classifier:
+\begin{itemize}[leftmargin=*]
+\item high zero-word density in the body;
+\item high frequency of \texttt{0x42480000} (\texttt{48.0}) words;
+\item resulting classification: \texttt{sparse-fixed-schedule} or not.
+\end{itemize}
+
+This was useful as a first pass and yielded a measurable threshold. In the
+current restoration matrix, routine-preserving behavior remained intact through
+\texttt{61} restored cells and collapsed at \texttt{62} under the old model.
+
+The next step replaced the pure classifier with a gradient:
+\begin{itemize}[leftmargin=*]
+\item a continuous \texttt{ieg\_rigidity\_gradient};
+\item a derived \texttt{routine\_rigidity\_signal};
+\item a runtime \texttt{routine\_hold} that decays over time and disruption.
+\end{itemize}
+
+This change preserved the broad distinction between the specimen routine path
+and the non-routine paths, but created a more realistic transitional band in
+which partial restorations retain reduced routine influence instead of falling
+instantly to zero.
+
+\section{Dynamic Probe Results}
+The most informative current probe family is time-based rather than
+single-event. Three probe types are especially important:
+\begin{itemize}[leftmargin=*]
+\item routine endurance under repeated idle and disruption pressure;
+\item social endurance after a high-salience interaction;
+\item low-salience endurance after weaker interaction.
+\end{itemize}
+
+Table~\ref{tab:dynamic} summarizes the current dynamic conclusion boundary.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.23\linewidth} >{\raggedright\arraybackslash}p{0.18\linewidth} >{\raggedright\arraybackslash}p{0.18\linewidth} >{\raggedright\arraybackslash}p{0.18\linewidth}}
+\toprule
+Probe family & \texttt{0400} & \texttt{0400 + 1200} & \texttt{0400 + IEG} \\
+\midrule
+Routine endurance & breaks, sleeps & breaks, sleeps & preserves both cycles, stays awake \\
+High-salience social endurance & breaks, sleeps & two social redirections, then sleep & preserves routine, stays awake \\
+Low-salience social endurance & breaks, sleeps & weakens sooner, then sleep & preserves routine, stays awake \\
+\bottomrule
+\end{tabular}
+\caption{Current dynamic boundary among the three main persistent-state paths.}
+\label{tab:dynamic}
+\end{table}
+
+The current interpretation is:
+\begin{enumerate}[leftmargin=*]
+\item \texttt{0400} is a shutdown-oriented pivot;
+\item \texttt{1200} supports a socially-cued, salience-sensitive persistence
+family;
+\item specimen-side \texttt{IEG.CFG} supports a routine-preserving,
+multi-cycle persistence family.
+\end{enumerate}
+
+\section{Live-Hardware Test Matrix}
+The research has now progressed far enough to justify a disciplined live bench
+matrix. Four primary stick trees have been prepared:
+\begin{enumerate}[leftmargin=*]
+\item baseline;
+\item \texttt{0400};
+\item \texttt{0400 + 1200};
+\item \texttt{0400 + IEG}.
+\end{enumerate}
+
+Three live trial families are proposed:
+\begin{enumerate}[leftmargin=*]
+\item no-touch routine pressure;
+\item high-salience social pressure;
+\item low-salience social pressure.
+\end{enumerate}
+
+This matrix is designed to test whether the simulator-side distinction survives
+on real ERS-7 hardware and whether cue salience and multi-cycle persistence are
+observable outside the host-side model.
+
+\section{Contributions}
+This work makes five current contributions:
+\begin{enumerate}[leftmargin=*]
+\item a verified recovery and preservation workflow for a repaired Sony-formatted
+ERS-7 MIND 2 stick;
+\item a reproducible behavior-forensics workflow over preserved persistent state;
+\item a host-side simulator that exposes candidate behavioral levers from
+persistent files;
+\item a structural and dynamic characterization of specimen-side
+\texttt{IEG.CFG};
+\item a live-hardware matrix that turns current simulator conclusions into
+falsifiable bench trials.
+\end{enumerate}
+
+\section{Limitations}
+Several limits are important:
+\begin{itemize}[leftmargin=*]
+\item the simulator is heuristic and not a decoded Sony runtime;
+\item current results are anchored in a small number of preserved reference
+trees and one especially valuable repaired specimen;
+\item the strongest findings are still host-side until repeated live-hardware
+tests confirm or refute them;
+\item some dynamic distinctions may reflect model choices rather than robot
+truth and must therefore be treated as hypotheses.
+\end{itemize}
+
+\section{Next Steps}
+The next research steps are straightforward:
+\begin{enumerate}[leftmargin=*]
+\item execute the prepared four-stick live-hardware matrix;
+\item log repeated observations with the current observation template;
+\item compare live results to the current dynamic verdict tables;
+\item refine the model only where live evidence demands it;
+\item extend the paper with real-hardware results, figures, and stronger
+bibliographic grounding in Sony documentation and robot behavior literature.
+\end{enumerate}
+
+\section{Conclusion}
+The present work establishes that AIBO ERS-7 MIND 2 behavior can be approached
+as a forensics problem over preserved filesystem state. A repaired and
+preserved working stick can serve as a behavioral specimen. Host-side modeling
+can isolate candidate persistent-state levers. Most importantly, current
+evidence suggests that persistent behavior is not monolithic: shutdown
+resistance, socially-cued persistence, and routine-preserving persistence are
+separable enough to support structured experimentation. That is a meaningful
+step toward a publishable science of legacy robotic behavior preservation and
+reconstruction.
+
+\end{document}
