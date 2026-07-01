@@ -13,5 +13,6 @@ samples/common/HelloWorld/HelloWorld/*.snap.cc
 samples/common/HelloWorld/HelloWorld/*.bin
 !samples/common/HelloWorld/MS/OPEN-R/MW/OBJS/HELLO.BIN
 aperios/hello-world-host
+aperios/mind2-behavior-sim
 features/*/build/
 local-artifacts/

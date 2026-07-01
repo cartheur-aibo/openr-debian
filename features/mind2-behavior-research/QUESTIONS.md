@@ -23,6 +23,12 @@
    comparison MIND 2 sticks?
 5. Which of those differing files are plain text, structured, or easy to
    classify before binary reverse-engineering?
+6. Can the stable `17 x 24` suffix in retail `MW/CONF/CONNECT.CFG` be mapped
+   to a reproducible middleware connection graph?
+7. Is `MW/CONF/SERVICE.CFG` a sibling compiled table with its own role, rather
+   than a direct label map for `CONNECT.CFG`?
+8. Why do `17` stable `CONNECT.CFG` records survive when the unchanged MW
+   object roster is only `12` binaries?
 
 ## Experimental Questions
 
@@ -38,6 +44,10 @@
    transplanted without `AIBO-ID`?
 7. Does the behavior transfer more strongly when `AIBO-ID` is transplanted
    together with the app-state cluster?
+8. Can a host-side decoded retail MW connection graph improve simulator
+   predictions before hardware trials?
+9. Can the `21` versioned vs `17` stable record partition in retail
+   `CONNECT.CFG` be used as an explicit simulator feature boundary?
 
 ## Preservation Questions
 

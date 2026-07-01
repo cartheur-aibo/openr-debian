@@ -34,6 +34,7 @@ The simulator currently consumes these files when they are present:
 
 - `OPEN-R/APP/DATA/P/STTLOG`
 - `OPEN-R/MW/DATA/P/PAT.LOG`
+- `OPEN-R/MW/CONF/CONNECT.CFG`
 - `OPEN-R/SYSTEM/DATA/P/AIBO-ID`
 - `OPEN-R/APP/DATA/P/AWAKING.CFG`
 - `OPEN-R/APP/DATA/P/IEG.CFG`
@@ -41,11 +42,20 @@ The simulator currently consumes these files when they are present:
 - `OPEN-R/APP/DATA/P/GVAR`
 - `OPEN-R/APP/DATA/P/SIDRDATA.BIN`
 
+For retail MW `CONNECT.CFG`, the simulator now also recognizes the current
+research structure clue:
+
+- `8`-byte prelude
+- `38` aligned `24`-byte records
+- a `21`-record versioned front section
+- a `17`-record stable trailing section
+
 ## Current Outputs
 
 The simulator emits:
 
 - a symbolic behavior profile
+- a retail MW connection-table partition summary when present
 - event-by-event transitions
 - a shutdown-resistance judgment
 - likely file-write hints for each event
@@ -86,6 +96,21 @@ This should **not** be treated as:
 - proof of exact Sony internal behavior logic
 - a replacement for hardware confirmation
 
+## Current CONNECT.CFG Use
+
+The simulator currently uses the retail MW `CONNECT.CFG` clue in a deliberately
+small way:
+
+- it reports the detected `versioned:21, stable:17` partition in the profile
+- it reports a known retail variant label when recognized
+  - `retail-mind2-known`
+  - `retail-mind3-known`
+- it treats that mixed retail layout as a modest extra plausibility signal for
+  socially resistant shutdown behavior
+
+This is a hypothesis convenience, not a claim that Sony's real runtime uses the
+table exactly this way.
+
 ## First Useful Result
 
 With the current `mind2-shutdown-probe.scn` scenario, the simulator already
@@ -98,3 +123,25 @@ produces a meaningful split:
 That does not prove the real internal Sony logic, but it does show that the
 baseline simulator can now express one of the central observed behavior
 differences as a repeatable host-side hypothesis.
+
+It also means the simulator now exposes one of the repo's strongest structural
+reverse-engineering clues directly in its runtime output, instead of keeping it
+only in offline notes and scripts.
+
+## Current Swap Boundary
+
+A direct host-side experiment was also run in which a specimen-style tree kept
+all persistent state the same but swapped only `OPEN-R/MW/CONF/CONNECT.CFG`
+from retail MIND 2 to retail MIND 3.
+
+Result:
+
+- the simulator profile changed variant label from `retail-mind2-known` to
+  `retail-mind3-known`
+- but the shutdown-probe scenario outcome did not change under the current
+  heuristic
+
+This is an important boundary:
+
+- the simulator can now *see* the variant distinction
+- but it does not yet assign a stronger behavioral meaning to that distinction

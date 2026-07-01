@@ -101,12 +101,14 @@ Supporting tools and notes:
 - [scripts/compare-sttlog.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/compare-sttlog.sh)
 - [scripts/stage-mind2-behavior-transplant.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/stage-mind2-behavior-transplant.sh)
 - [scripts/analyze-retail-objectcfg.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/analyze-retail-objectcfg.sh)
+- [scripts/analyze-retail-connect-table.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/analyze-retail-connect-table.sh)
 - [BASELINE-SIMULATOR.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/BASELINE-SIMULATOR.md)
 - [INITIAL-COMPARISON-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/INITIAL-COMPARISON-2026-07-01.md)
 - [SUSPECT-DOSSIER-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/SUSPECT-DOSSIER-2026-07-01.md)
 - [AIBO-ID-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/AIBO-ID-NOTE-2026-07-01.md)
 - [EXPERIMENT-DESIGN-IDENTITY-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/EXPERIMENT-DESIGN-IDENTITY-2026-07-01.md)
 - [OBJECT-CFG-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/OBJECT-CFG-NOTE-2026-07-01.md)
+- [CONNECT-CFG-SUFFIX-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/CONNECT-CFG-SUFFIX-NOTE-2026-07-01.md)
 
 ## Why This Matters
 

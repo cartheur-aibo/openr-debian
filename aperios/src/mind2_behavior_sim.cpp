@@ -29,9 +29,20 @@ struct PatLogSummary {
     double mean = 0.0;
 };
 
+struct RetailConnectSummary {
+    bool present = false;
+    bool aligned_after8_records = false;
+    bool mixed_stable_tail_layout = false;
+    std::size_t record_count = 0;
+    std::size_t stable_tail_records = 0;
+    std::size_t versioned_prefix_records = 0;
+    std::string variant = "unknown";
+};
+
 struct BehaviorProfile {
     std::map<std::string, SttlogRow> sttlog_rows;
     PatLogSummary pat_log;
+    RetailConnectSummary retail_connect;
     std::vector<std::uint8_t> aibo_id;
     std::size_t awaking_size = 0;
     std::size_t ieg_size = 0;
@@ -95,6 +106,48 @@ std::vector<std::uint8_t> read_binary(const std::string& path) {
         return {};
     }
     return std::vector<std::uint8_t>(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
+}
+
+RetailConnectSummary load_retail_connect_summary(const std::string& path) {
+    RetailConnectSummary summary;
+    const std::vector<std::uint8_t> data = read_binary(path);
+    if (data.empty()) {
+        return summary;
+    }
+
+    summary.present = true;
+    if (data.size() < 8 || ((data.size() - 8) % 24) != 0) {
+        return summary;
+    }
+
+    const std::string first8_hex = [&data]() {
+        std::ostringstream out;
+        for (std::size_t index = 0; index < 8 && index < data.size(); ++index) {
+            out << std::hex << std::setw(2) << std::setfill('0')
+                << static_cast<int>(data[index]);
+        }
+        return out.str();
+    }();
+
+    summary.aligned_after8_records = true;
+    summary.record_count = (data.size() - 8) / 24;
+
+    // Current retail MW CONNECT.CFG clue: 38 records after byte 8, with
+    // records 0-20 versioned and 21-37 stable across MIND 2/MIND 3.
+    if (summary.record_count == 38) {
+        summary.versioned_prefix_records = 21;
+        summary.stable_tail_records = 17;
+        summary.mixed_stable_tail_layout = true;
+        if (first8_hex == "0e207d53993b8df4") {
+            summary.variant = "retail-mind2-known";
+        } else if (first8_hex == "8dde29f70da8bc9f") {
+            summary.variant = "retail-mind3-known";
+        } else {
+            summary.variant = "retail-38-record-unknown-variant";
+        }
+    }
+
+    return summary;
 }
 
 std::map<std::string, SttlogRow> load_sttlog(const std::string& path) {
@@ -182,6 +235,8 @@ BehaviorProfile load_profile(const std::string& tree_root) {
     BehaviorProfile profile;
     profile.sttlog_rows = load_sttlog(join_path(tree_root, "OPEN-R/APP/DATA/P/STTLOG"));
     profile.pat_log = load_pat_log(join_path(tree_root, "OPEN-R/MW/DATA/P/PAT.LOG"));
+    profile.retail_connect = load_retail_connect_summary(
+        join_path(tree_root, "OPEN-R/MW/CONF/CONNECT.CFG"));
     profile.aibo_id = read_binary(join_path(tree_root, "OPEN-R/SYSTEM/DATA/P/AIBO-ID"));
     profile.awaking_size = file_size_or_zero(join_path(tree_root, "OPEN-R/APP/DATA/P/AWAKING.CFG"));
     profile.ieg_size = file_size_or_zero(join_path(tree_root, "OPEN-R/APP/DATA/P/IEG.CFG"));
@@ -220,6 +275,9 @@ BehaviorProfile load_profile(const std::string& tree_root) {
     if (profile.pat_log.sample_count > 0 && profile.pat_log.mean > 5.0) {
         profile.social_attachment += 1;
     }
+    if (profile.retail_connect.mixed_stable_tail_layout) {
+        profile.social_attachment += 1;
+    }
 
     profile.adaptability = 1;
     if (profile.ieg_size > 0) {
@@ -229,6 +287,9 @@ BehaviorProfile load_profile(const std::string& tree_root) {
         profile.adaptability += 1;
     }
     if (profile.pat_log.non_zero_count > profile.pat_log.sample_count / 2) {
+        profile.adaptability += 1;
+    }
+    if (profile.retail_connect.mixed_stable_tail_layout) {
         profile.adaptability += 1;
     }
 
@@ -281,6 +342,19 @@ void print_profile(const BehaviorProfile& profile) {
     std::cout << "  shutdown_resistance=" << profile.shutdown_resistance << "\n";
     std::cout << "  social_attachment=" << profile.social_attachment << "\n";
     std::cout << "  adaptability=" << profile.adaptability << "\n";
+    if (profile.retail_connect.present) {
+        std::cout << "  mw_connect_records=" << profile.retail_connect.record_count << "\n";
+        std::cout << "  mw_connect_variant=" << profile.retail_connect.variant << "\n";
+        if (profile.retail_connect.mixed_stable_tail_layout) {
+            std::cout << "  mw_connect_partition=versioned:"
+                      << profile.retail_connect.versioned_prefix_records
+                      << ",stable:" << profile.retail_connect.stable_tail_records << "\n";
+        } else if (profile.retail_connect.aligned_after8_records) {
+            std::cout << "  mw_connect_partition=aligned-retail-layout-without-known-21/17-split\n";
+        } else {
+            std::cout << "  mw_connect_partition=unclassified\n";
+        }
+    }
     std::cout << "state files:\n";
     std::cout << "  AWAKING.CFG=" << profile.awaking_size << " bytes\n";
     std::cout << "  IEG.CFG=" << profile.ieg_size << " bytes\n";
@@ -316,6 +390,12 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
         } else {
             std::cout << "soft boot chime\n";
         }
+        if (profile.retail_connect.mixed_stable_tail_layout) {
+            std::cout << "  mw-connect-hypothesis: mixed retail connection table "
+                      << "(" << profile.retail_connect.versioned_prefix_records
+                      << " versioned / " << profile.retail_connect.stable_tail_records
+                      << " stable records)\n";
+        }
         std::cout << "  symbolic-behavior: initialize interaction memory and active posture\n";
         note_expected_writes(event);
         return;
@@ -349,11 +429,17 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
 
     if (event == "shutdown_request") {
         const int resistance = profile.shutdown_resistance + state.engagement - state.fatigue;
-        if (profile.shutdown_resistance >= 3 && resistance >= 6 && state.shutdown_deferrals == 0) {
+        const bool retail_connect_bias =
+            profile.retail_connect.mixed_stable_tail_layout && state.engagement >= 1;
+        if ((profile.shutdown_resistance >= 3 || retail_connect_bias) &&
+            resistance >= 6 && state.shutdown_deferrals == 0) {
             ++state.shutdown_deferrals;
             state.fatigue += 1;
             std::cout << "  symbolic-behavior: resist immediate shutdown, remain socially engaged\n";
             std::cout << "  verdict: defer power-off once\n";
+            if (retail_connect_bias) {
+                std::cout << "  note: mixed MW retail connection layout increases deferral plausibility\n";
+            }
         } else {
             state.mode = "powering_down";
             std::cout << "  symbolic-behavior: accept shutdown sequence\n";
