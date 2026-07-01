@@ -64,9 +64,9 @@ These points are no longer guesses:
 
 This means:
 
-- the robot-side WLAN configuration in
+- the lab robot-side WLAN configuration in
   [src/ERS7M2/WLANCONF.TXT](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/src/ERS7M2/WLANCONF.TXT)
-  is a credible live baseline
+  is a credible operational baseline
 - access-point compatibility matters a lot
 - the 8 MB failures should not be treated as proof that our higher-level app
   workflows are wrong
@@ -100,7 +100,10 @@ When a future agent needs the best known inputs, start here:
 - [features/aibo-mind2/build/stick](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/aibo-mind2/build/stick)
   is the preserved staged copy of the real known-good 32 MB ERS-7 MIND 2 stick
 - [src/ERS7M2/WLANCONF.TXT](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/src/ERS7M2/WLANCONF.TXT)
-  is the known-good live WLAN config
+  is the lab-operational WLAN config used for current multi-robot testing, not
+  necessarily the preserved specimen WLAN state
+- the intended hostname naming convention for the current lab is:
+  `AIBO-M2A`, `AIBO-M2B`, `AIBO-M3A`
 - [features/ers7m2-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m2-test-stick/README.md)
   describes the larger-stick MIND 2 workflow
 - [features/ers7m3-test-stick/README.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/ers7m3-test-stick/README.md)

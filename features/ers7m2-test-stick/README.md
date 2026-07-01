@@ -11,7 +11,7 @@ known-good AIBO MIND 2 stick tree we captured from the real robot.
 Prepare a full MIND 2 stick for app testing with:
 
 - the known-good MIND 2 file tree
-- the known-good live Wi-Fi config from `src/ERS7M2/WLANCONF.TXT`
+- the lab-operational Wi-Fi config from `src/ERS7M2/WLANCONF.TXT`
 - a repeatable staging directory under `features/`
 
 ## Build The Staging Tree
@@ -44,6 +44,41 @@ which is the preserved staged copy of the known-good 32 MB MIND 2 stick.
 
 This means the 64 MB workflow starts from the best source of truth we have in
 the repo.
+
+## WLAN Scope
+
+The repo currently has two different valid WLAN contexts and they should not be
+mixed up:
+
+- `features/aibo-mind2/build/stick/OPEN-R/SYSTEM/CONF/WLANCONF.TXT`
+  belongs to the preserved specimen-style MIND 2 baseline and may reflect the
+  state that came from the preserved stick itself
+- `src/ERS7M2/WLANCONF.TXT`
+  is the lab-operational config used to prepare test sticks for the current
+  shared environment
+
+This workflow intentionally injects `src/ERS7M2/WLANCONF.TXT` because it is for
+testing and development in the lab, not for preserving a historical specimen
+unchanged.
+
+## Hostname Naming Convention
+
+`src/ERS7M2/WLANCONF.TXT` currently uses:
+
+- `HOSTNAME=AIBO`
+
+That is not descriptive enough for the current lab setup. With multiple ERS-7
+units, especially more than one MIND 2 robot, the repo should treat hostnames
+as per-robot identity rather than a shared default.
+
+The current intended naming convention is:
+
+- `AIBO-M2A`
+- `AIBO-M2B`
+- `AIBO-M3A`
+
+Future work should likely define per-robot WLAN variants built from that
+convention rather than assuming one shared hostname forever.
 
 ## Copy To The 64 MB Stick
 
@@ -79,7 +114,8 @@ We now have a verified live network result with the real robot:
 This is the strongest networking proof we have so far. It confirms:
 
 - the robot can join a compatible access point as a client
-- the live `WLANCONF.TXT` in `src/ERS7M2/WLANCONF.TXT` is a credible baseline
+- the lab `WLANCONF.TXT` in `src/ERS7M2/WLANCONF.TXT` is a credible operational
+  baseline
 - earlier failures were strongly influenced by access-point compatibility, not
   just stick contents
 
