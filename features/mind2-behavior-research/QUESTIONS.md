@@ -61,6 +61,12 @@
 22. Are `1200` and calibrated `IEG.CFG` genuinely parallel bridge signals, or
     do alternate scenarios show a stable difference between social-weighted and
     rigidity-weighted bridge paths?
+23. Do we now need richer event semantics, rather than more scenarios alone, to
+    expose the difference between `1200` and calibrated `IEG.CFG` at the final
+    verdict level?
+24. Does the new no-touch routine sleep probe establish a stable verdict-level
+    separation in which `IEG.CFG` preserves routine while `1200` still yields
+    normal sleep entry?
 
 ## Experimental Questions
 

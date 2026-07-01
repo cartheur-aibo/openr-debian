@@ -1,0 +1,6 @@
+# Sharper sleep probe: no touch boost, so routine-rigidity and social-weighted
+# bridge paths can separate at the sleep_request boundary.
+boot
+observe_startup_audio
+idle_tick
+sleep_request

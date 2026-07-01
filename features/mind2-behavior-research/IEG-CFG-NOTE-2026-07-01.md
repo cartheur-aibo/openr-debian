@@ -153,6 +153,60 @@ Again, the top-line outcome aligns, but the profile shape stays different:
 - `1200`: higher social attachment
 - `IEG.CFG`: higher shutdown resistance and lower adaptability
 
+## Current Equivalence Boundary
+
+This comparison also exposes a limitation of the current event model:
+
+- `0400 + 1200`
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+- `0400 + IEG.CFG`
+  - `shutdown_resistance=4`
+  - `social_attachment=7`
+
+Those are genuinely different profiles, but the present event rules often
+collapse them to the same verdict because:
+
+- boot engagement comes from `social_attachment / 2`
+- the `1200` path gains more engagement
+- the `IEG.CFG` path gains more shutdown resistance
+- under the current shutdown and sleep gates, those differences often net out
+
+So the present research boundary is:
+
+- `IEG.CFG` is now a real second bridge path in the simulator
+- but separating it cleanly from `1200` at the verdict level will likely
+  require richer event semantics, not only more scenarios built from the same
+  current event rules
+
+That richer event step has now been added for sleep behavior.
+
+## Routine-Sleep Separation
+
+Under the new no-touch routine sleep probe:
+
+- `boot`
+- `observe_startup_audio`
+- `idle_tick`
+- `sleep_request`
+
+the lean packaged MIND 2 baseline now separates cleanly:
+
+- baseline:
+  - enters sleep
+- `0400` only:
+  - enters sleep
+- `0400 + 1200`:
+  - enters sleep
+- `0400 + IEG.CFG`:
+  - postpones sleep to preserve a fixed routine state
+
+This is the first current verdict-level separation between the two bridge
+families:
+
+- `1200` remains the more social-weighted bridge
+- calibrated `IEG.CFG` now expresses a distinct routine-preservation path
+
 ## Current Interpretation Boundary
 
 This is **not** proof that Sony's real runtime treats `IEG.CFG` this way.

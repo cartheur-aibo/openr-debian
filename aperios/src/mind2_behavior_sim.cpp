@@ -526,7 +526,9 @@ void simulate_event(const std::string& event, const BehaviorProfile& profile, Si
     }
 
     if (event == "sleep_request") {
-        if (state.engagement >= 5 && profile.shutdown_resistance >= 2) {
+        if (profile.ieg.sparse_fixed_schedule && profile.shutdown_resistance >= 4) {
+            std::cout << "  symbolic-behavior: postpone sleep to preserve a fixed routine state\n";
+        } else if (state.engagement >= 5 && profile.shutdown_resistance >= 2) {
             std::cout << "  symbolic-behavior: postpone sleep because engagement remains high\n";
         } else {
             state.mode = "sleep";

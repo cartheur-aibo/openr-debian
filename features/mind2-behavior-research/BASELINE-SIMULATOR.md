@@ -629,3 +629,77 @@ This strengthens the current reading:
 - but they are not identical
 - `1200` is the more social-weighted bridge
 - `IEG.CFG` is the more rigidity/resistance-weighted bridge
+
+## Current Event-Model Equivalence
+
+One more conclusion boundary is now clear:
+
+- `0400 + 1200` and calibrated `0400 + IEG.CFG` often converge to the same
+  verdict under the current event model, even though their profile shapes differ
+
+Current lean-baseline profiles:
+
+- `0400 + 1200`
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+- `0400 + IEG.CFG`
+  - `shutdown_resistance=4`
+  - `social_attachment=7`
+
+Why they often converge:
+
+- boot engagement is derived from `social_attachment / 2`
+  - `1200` path boots with engagement `4`
+  - `IEG.CFG` path boots with engagement `3`
+- but the `IEG.CFG` path carries `+1` more shutdown resistance
+- after a single `head_touch`, both land in the same practical shutdown band
+  under the current formula
+- after a single `head_touch`, both also satisfy the present sleep-postponement
+  gate
+
+So under the current event algebra:
+
+- `1200` and calibrated `IEG.CFG` are distinguishable in profile shape
+- but not always distinguishable at the final verdict level
+- separating them further likely requires richer event semantics, not merely
+  more scenario shuffling with the same current event rules
+
+That richer event step has now been taken for sleep behavior.
+
+## Routine-Sleep Probe
+
+A sharper sleep scenario was added:
+
+- [simulator/scenarios/mind2-routine-sleep-probe.scn](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/simulator/scenarios/mind2-routine-sleep-probe.scn)
+
+Sequence:
+
+```text
+boot
+observe_startup_audio
+idle_tick
+sleep_request
+```
+
+The simulator's `sleep_request` handling now distinguishes:
+
+- high-engagement postponement
+- routine-preservation postponement for the calibrated sparse `IEG.CFG` path
+
+Observed result on the lean packaged MIND 2 baseline:
+
+- baseline:
+  - enters sleep
+- `0400` only:
+  - enters sleep
+- `0400 + 1200`:
+  - enters sleep
+- `0400 + IEG.CFG`:
+  - postpones sleep to preserve a fixed routine state
+
+This is the first current scenario that cleanly separates the two bridge paths
+at the verdict level:
+
+- `1200` remains the more social-weighted bridge
+- calibrated `IEG.CFG` now has a distinct routine-preservation expression that
+  `1200` does not trigger under the same no-touch sleep probe
