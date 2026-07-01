@@ -37,6 +37,19 @@
     carry most of the current shutdown-resistance weight?
 12. Under the fatigue-first shutdown probe, are `0300/0400/1000` already
     sufficient as the decisive current shutdown verdict subset?
+13. Is `0400` the primary current shutdown pivot, with `0300` and `1000`
+    acting only as secondary contributors unless `0400` also changes?
+14. Does `0400` remain decisive only under the fatigue-first probe, while the
+    older shutdown probe is too engagement-rich to expose it at the verdict
+    level?
+15. If specimen `0400` alone is transplanted into a baseline tree, does the
+    fatigue-first shutdown verdict shift in the forward direction as well?
+16. On leaner MIND 2 baselines, does `0400` require `1200` as a bridge/social
+    companion to cross the shutdown verdict boundary?
+17. Does `1200` have any independent shutdown effect at all, or only a bridge
+    role that amplifies `0400`?
+18. Do the current modeled alternatives `0046` and `0055` fail to substitute
+    for `1200`, making `0400 + 1200` the strongest current minimal pair?
 
 ## Experimental Questions
 
@@ -68,6 +81,17 @@
 13. Does the fatigue-first probe provide the right discriminator for future
     STTLOG row experiments, replacing the older shutdown probe as the main
     host-side test?
+14. If `0400` alone flips the fatigue-first verdict, does it still dominate
+    under other plausible shutdown scenarios, or only at this sharper boundary?
+15. If `0400` is transplanted into a leaner baseline, what is the minimal
+    companion set needed to restore shutdown deferral: `1200` alone, `0046`
+    alone, or some other small row group?
+16. Is `0400 + 1200` the minimal current pair for lean-baseline shutdown
+    deferral, with `0046` only increasing social weight but not changing the
+    verdict boundary?
+17. Are there any remaining currently modeled row combinations that can match
+    `0400 + 1200`, or have we reached the present simulator-side minimal pair
+    boundary?
 
 ## Preservation Questions
 

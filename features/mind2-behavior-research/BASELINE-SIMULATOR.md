@@ -303,3 +303,184 @@ This is the clearest current host-side conclusion:
   verdict
 - the fatigue-first probe is currently a better discriminator than the older
   shutdown probe for row-level `STTLOG` work
+
+## Single-Row Verdict Boundary
+
+The next pass isolated the remaining shutdown-focused rows one by one under the
+same fatigue-first probe:
+
+- revert only `0300`
+- revert only `0400`
+- revert only `1000`
+- revert `0300 + 1000` together while leaving specimen-style `0400` intact
+
+Observed result:
+
+- `0300`-only reversion:
+  - `shutdown_resistance=4`
+  - shutdown verdict still deferred once
+- `0400`-only reversion:
+  - `shutdown_resistance: 4 -> 2`
+  - shutdown verdict changed to accepted
+- `1000`-only reversion:
+  - `shutdown_resistance=4`
+  - shutdown verdict still deferred once
+- `0300 + 1000` reversion without `0400`:
+  - `shutdown_resistance=4`
+  - shutdown verdict still deferred once
+
+This is the strongest current simulator-side boundary yet:
+
+- `0400` is sufficient, by itself, to flip the fatigue-first shutdown verdict
+- `0300` and `1000` are not sufficient individually
+- `0300 + 1000` together are still not sufficient without `0400`
+
+So under the current heuristic and current sharper scenario, row `0400` is the
+primary shutdown pivot inside the present `STTLOG` subset.
+
+One more control check matters here:
+
+- under the older `mind2-shutdown-probe.scn`, `0400`-only reversion lowers
+  `shutdown_resistance` from `4` to `2`
+- but it does **not** change the first shutdown verdict there, which still
+  defers once because that older scenario leaves more engagement margin in
+  place before the request
+
+So the present conclusion boundary is precise:
+
+- `0400` is the primary currently modeled shutdown pivot
+- the fatigue-first probe is the scenario that exposes that pivot at the final
+  verdict level
+- the older shutdown probe remains useful, but it is too forgiving to separate
+  this row by verdict on its own
+
+## Forward-Transfer Check
+
+The next causality check moved specimen-side rows into a baseline-style tree
+instead of only reverting specimen rows back toward baseline.
+
+Tested under the same fatigue-first probe:
+
+1. baseline control tree
+2. baseline tree with specimen `0400` only
+3. baseline tree with specimen `0300` only
+4. baseline tree with specimen `0300 + 0400 + 1000`
+
+Observed result:
+
+- baseline control:
+  - `shutdown_resistance=2`
+  - verdict: accept shutdown
+- baseline + specimen `0400` only:
+  - `shutdown_resistance: 2 -> 4`
+  - verdict: defer once
+- baseline + specimen `0300` only:
+  - `shutdown_resistance=2`
+  - verdict: accept shutdown
+- baseline + specimen `0300 + 0400 + 1000`:
+  - `shutdown_resistance=4`
+  - verdict: defer once
+
+This strengthens the current host-side claim substantially:
+
+- specimen-style `0400` is not only necessary in the strongest current
+  backward-reversion test
+- it is also sufficient, by itself, to push the baseline-style tree across the
+  fatigue-first shutdown verdict boundary in the forward direction
+
+So under the present heuristic, `0400` behaves like an active shutdown-state
+lever rather than only a passive correlated marker.
+
+## Lean-Baseline Context Boundary
+
+The next stress test used the packaged MIND 2 stick tree under
+`features/aibo-mind2/build/stick`, which starts from a leaner baseline profile
+than `baseline-control`:
+
+- baseline packaged tree:
+  - `shutdown_resistance=1`
+  - `social_attachment=5`
+  - verdict: accept shutdown
+
+That tree was then given specimen-side rows in small combinations.
+
+Observed result:
+
+- packaged baseline + specimen `0400` only:
+  - `shutdown_resistance: 1 -> 3`
+  - `social_attachment=5`
+  - verdict: still accept shutdown
+- packaged baseline + specimen `0300` only:
+  - `shutdown_resistance: 1 -> 2`
+  - verdict: still accept shutdown
+- packaged baseline + specimen `0300 + 0400 + 1000`:
+  - `shutdown_resistance=4`
+  - `social_attachment=5`
+  - verdict: still accept shutdown
+- packaged baseline + specimen `0400 + 1200`:
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+  - verdict: defer once
+- packaged baseline + specimen `0400 + 0046 + 1200`:
+  - `shutdown_resistance=3`
+  - `social_attachment=9`
+  - verdict: defer once
+
+This refines the current interpretation:
+
+- `0400` remains the primary shutdown-side pivot
+- but the final verdict also depends on enough engagement/social weight being
+  present at shutdown time
+- on leaner baselines, specimen-style `1200` is sufficient to supply that
+  missing bridge
+- `0046` can add social weight too, but it is not required once `1200` is in
+  place
+
+So the current host-side model is best described as:
+
+- `0400`: primary shutdown-resistance lever
+- `1200`: primary bridge/social amplifier that can make `0400` matter at the
+  verdict boundary on leaner baselines
+- `0046`: smaller social modifier
+
+One more control sharpens that boundary:
+
+- packaged baseline + specimen `1200` only:
+  - `shutdown_resistance=1`
+  - `social_attachment=8`
+  - verdict: accept shutdown
+- packaged baseline + specimen `0400 + 0046`:
+  - `shutdown_resistance=3`
+  - `social_attachment=6`
+  - verdict: accept shutdown
+- packaged baseline + specimen `0400 + 1200`:
+  - `shutdown_resistance=3`
+  - `social_attachment=8`
+  - verdict: defer once
+
+So `1200` has no independent current shutdown-deferral power by itself, but it
+is the strongest current companion row for making `0400` cross the fatigue-first
+verdict boundary on lean baselines.
+
+The remaining currently modeled social-side substitutes were then checked on
+that same packaged baseline:
+
+- specimen `0400 + 0055`:
+  - `shutdown_resistance=3`
+  - `social_attachment=5`
+  - verdict: accept shutdown
+- specimen `0400 + 0046 + 0055`:
+  - `shutdown_resistance=3`
+  - `social_attachment=6`
+  - verdict: accept shutdown
+- specimen `0046 + 0055 + 1200` without `0400`:
+  - `shutdown_resistance=1`
+  - `social_attachment=9`
+  - verdict: accept shutdown
+
+So the current minimal effective pair on the lean packaged MIND 2 baseline is
+now much better constrained:
+
+- `0400 + 1200` is sufficient
+- the currently modeled alternatives built from `0046` and `0055` do not
+  substitute for that pair

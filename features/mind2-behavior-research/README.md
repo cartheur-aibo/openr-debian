@@ -110,6 +110,8 @@ Supporting tools and notes:
 - [EXPERIMENT-DESIGN-IDENTITY-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/EXPERIMENT-DESIGN-IDENTITY-2026-07-01.md)
 - [OBJECT-CFG-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/OBJECT-CFG-NOTE-2026-07-01.md)
 - [CONNECT-CFG-SUFFIX-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/CONNECT-CFG-SUFFIX-NOTE-2026-07-01.md)
+- [STTLOG-0400-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/STTLOG-0400-NOTE-2026-07-01.md)
+- [STTLOG-1200-NOTE-2026-07-01.md](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/features/mind2-behavior-research/STTLOG-1200-NOTE-2026-07-01.md)
 
 ## Why This Matters
 
