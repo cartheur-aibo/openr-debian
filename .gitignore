@@ -20,3 +20,6 @@ local-artifacts/
 paper/*.aux
 paper/*.log
 paper/*.out
+
+# Bench trial trees and copied test payloads
+trials/
