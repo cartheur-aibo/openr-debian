@@ -99,6 +99,7 @@ Supporting tools and notes:
 
 - [scripts/compare-mind2-persistent-state.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/compare-mind2-persistent-state.sh)
 - [scripts/compare-sttlog.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/compare-sttlog.sh)
+- [scripts/rewrite-sttlog-rows.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/rewrite-sttlog-rows.sh)
 - [scripts/stage-mind2-behavior-transplant.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/stage-mind2-behavior-transplant.sh)
 - [scripts/analyze-retail-objectcfg.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/analyze-retail-objectcfg.sh)
 - [scripts/analyze-retail-connect-table.sh](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/scripts/analyze-retail-connect-table.sh)

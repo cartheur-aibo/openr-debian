@@ -1,0 +1,6 @@
+# Sharper shutdown probe: add one idle tick before the first shutdown request
+# so row-level STTLOG differences have less engagement margin to hide behind.
+boot
+observe_startup_audio
+idle_tick
+shutdown_request

@@ -29,6 +29,14 @@
    than a direct label map for `CONNECT.CFG`?
 8. Why do `17` stable `CONNECT.CFG` records survive when the unchanged MW
    object roster is only `12` binaries?
+9. Does `STTLOG` act as the dominant current host-side behavior lever in the
+   simulator, ahead of `PAT.LOG`, `FVAR`, and `GVAR`?
+10. Is the effective current `STTLOG` shutdown subset primarily
+    `0300/0400/1000/1200`, with `0046` acting as a separate social modifier?
+11. Does `1200` behave more like a bridge/social row, while `0300/0400/1000`
+    carry most of the current shutdown-resistance weight?
+12. Under the fatigue-first shutdown probe, are `0300/0400/1000` already
+    sufficient as the decisive current shutdown verdict subset?
 
 ## Experimental Questions
 
@@ -48,6 +56,18 @@
    predictions before hardware trials?
 9. Can the `21` versioned vs `17` stable record partition in retail
    `CONNECT.CFG` be used as an explicit simulator feature boundary?
+10. If `STTLOG` alone is reverted or transplanted, does the simulated shutdown
+    and social profile move more strongly than for the `PAT.LOG + FVAR + GVAR`
+    cluster?
+11. If only `0300`, `0400`, `1000`, and `1200` are changed, can we isolate the
+    shutdown profile without collapsing the whole specimen-style behavior
+    signature?
+12. Do we need a sharper scenario or threshold change so that the row-level
+    `STTLOG` splits alter the final shutdown verdict, not only the profile
+    signals?
+13. Does the fatigue-first probe provide the right discriminator for future
+    STTLOG row experiments, replacing the older shutdown probe as the main
+    host-side test?
 
 ## Preservation Questions
 

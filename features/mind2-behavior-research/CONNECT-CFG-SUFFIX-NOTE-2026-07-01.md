@@ -426,6 +426,54 @@ This is a useful conclusion boundary:
 - but the current simulator has not yet reached a variant-specific behavioral
   interpretation for it
 
+We then ran the next paired companion experiment:
+
+- control tree: specimen-style tree with retail MIND 2
+  `MW/CONF/CONNECT.CFG` and `MW/CONF/DESIGNDB.CFG`
+- paired swap tree: identical tree except both files replaced with the retail
+  MIND 3 versions
+
+Observed result under the same shutdown-probe scenario:
+
+- the simulator still recognized `mw_connect_variant=retail-mind3-known`
+- but the profile and event verdicts remained unchanged
+  - `social_attachment=9`
+  - `adaptability=5`
+  - first shutdown request deferred once
+  - second shutdown request accepted
+
+Current interpretation:
+
+- even the paired `CONNECT.CFG + DESIGNDB.CFG` MW swap is not sufficient, by
+  itself, to change the current host-side shutdown hypothesis
+- under the present simulator, these MW retail config files are acting more
+  like structural context than dominant behavioral drivers
+- the current host-side behavior outcome remains more strongly constrained by
+  persistent app/state data such as `STTLOG`, `PAT.LOG`, and the app-state
+  cluster
+
+We then extended that boundary to the baseline-state side of the matrix:
+
+- baseline control tree: bundled `opt/AIBO7M2`
+- baseline paired swap tree: same tree with retail MIND 3
+  `CONNECT.CFG + DESIGNDB.CFG`
+
+Observed result:
+
+- both baseline-side trees kept the same simulator profile
+  - `social_attachment=7`
+  - `adaptability=5`
+  - identical shutdown-probe verdict sequence
+- the only profile difference from the specimen-style trees remained in the
+  app/state-driven side of the model, not the MW swap side
+
+That strengthens the current host-side boundary:
+
+- MW retail config swaps, even paired, are not sufficient to move the present
+  simulator outcome on either the specimen-style or baseline-style side
+- the strongest current simulator split still comes from the persistent
+  behavior/state cluster
+
 ## Immediate Next Questions
 
 1. Do any `24`-byte suffix records correlate with counts or ordering implied by

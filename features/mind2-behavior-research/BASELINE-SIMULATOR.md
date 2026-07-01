@@ -145,3 +145,161 @@ This is an important boundary:
 
 - the simulator can now *see* the variant distinction
 - but it does not yet assign a stronger behavioral meaning to that distinction
+
+A follow-on paired swap was also tested:
+
+- `OPEN-R/MW/CONF/CONNECT.CFG`
+- `OPEN-R/MW/CONF/DESIGNDB.CFG`
+
+both replaced together with the retail MIND 3 versions in an otherwise
+specimen-style tree.
+
+That paired swap also left the shutdown-probe outcome unchanged under the
+current heuristic.
+
+So the present simulator evidence suggests:
+
+- MW retail config structure is worth surfacing and preserving
+- but the dominant host-side behavior signals still come from persistent
+  behavior/state files rather than from these MW config swaps alone
+
+The same conclusion held on the baseline-state side as well:
+
+- bundled `opt/AIBO7M2`
+- and a baseline clone with paired MIND 3 `CONNECT.CFG + DESIGNDB.CFG` swaps
+
+produced the same host-side profile and shutdown-probe outcome.
+
+So the current simulator matrix points to:
+
+- persistent app/state files as the dominant current behavior drivers
+- MW retail config structure as an important contextual clue, but not yet a
+  decisive standalone lever in the heuristic
+
+## Current Dominant Lever
+
+The next simulator-side matrix step isolated two specimen-style reversions:
+
+1. revert only `OPEN-R/APP/DATA/P/STTLOG` to the baseline version
+2. revert `OPEN-R/MW/DATA/P/PAT.LOG` plus
+   `OPEN-R/APP/DATA/P/FVAR` and `OPEN-R/APP/DATA/P/GVAR` together to baseline
+
+Observed result:
+
+- `STTLOG`-only reversion changed the specimen-style profile back to the
+  baseline-side pattern
+  - `shutdown_resistance: 4 -> 2`
+  - `social_attachment: 9 -> 7`
+  - first shutdown request changed from deferred to accepted
+- `PAT.LOG + FVAR + GVAR` reversion did **not** change the specimen-style
+  profile under the current heuristic
+
+That makes `STTLOG` the strongest current host-side behavior lever in this
+simulator, ahead of both:
+
+- the tested MW retail config swaps
+- the tested `PAT.LOG + FVAR + GVAR` cluster reversion
+
+## STTLOG Row Split
+
+The next pass split the effective `STTLOG` change set into:
+
+- shutdown-focused rows: `0300`, `0400`, `1000`, `1200`
+- social-only row: `0046`
+
+Observed result:
+
+- reverting shutdown-focused rows changed:
+  - `shutdown_resistance: 4 -> 2`
+  - `social_attachment: 9 -> 8`
+  - but the first shutdown request still deferred once under the current
+    heuristic
+- reverting only row `0046` changed:
+  - `social_attachment: 9 -> 8`
+  - while leaving `shutdown_resistance=4`
+  - and leaving the shutdown verdict sequence unchanged
+
+This suggests the current simulator is reading:
+
+- `0300`, `0400`, `1000`, `1200` as the dominant current shutdown-state subset
+- `0046` as a smaller social-weight modifier
+
+The overlap is also informative:
+
+- row `1200` currently contributes to both shutdown resistance and social
+  attachment in the heuristic
+
+## Row 1200 Isolation
+
+The next split isolated row `1200` against the remaining shutdown-focused rows:
+
+1. revert only `1200`
+2. revert only `0300`, `0400`, and `1000`
+
+Observed result:
+
+- `1200`-only reversion changed:
+  - `social_attachment: 9 -> 8`
+  - while keeping `shutdown_resistance=4`
+  - and keeping the shutdown verdict sequence unchanged
+- `0300 + 0400 + 1000` reversion changed:
+  - `shutdown_resistance: 4 -> 2`
+  - while keeping `social_attachment=9`
+  - and still keeping the shutdown verdict sequence unchanged under the current
+    scenario/thresholds
+
+This is the clearest current row-level split:
+
+- `0300`, `0400`, and `1000` are the primary current shutdown-resistance rows
+- `1200` behaves more like a bridge/social row than a primary shutdown driver
+- `0046` remains a smaller social-only modifier
+
+The remaining caution is that the current shutdown-probe scenario still does not
+fully separate these row groups at the final verdict level, even though the
+profile signals now split cleanly.
+
+## Fatigue-First Shutdown Probe
+
+To expose the row split at the verdict level, a sharper scenario was added:
+
+- [simulator/scenarios/mind2-shutdown-fatigue-probe.scn](/home/cartheur/ame/aiventure/aiventure-github/cartheur-aibo/openr-debian/simulator/scenarios/mind2-shutdown-fatigue-probe.scn)
+
+Sequence:
+
+```text
+boot
+observe_startup_audio
+idle_tick
+shutdown_request
+```
+
+This one extra `idle_tick` lowers the available resistance margin before the
+first shutdown request.
+
+Observed result:
+
+- specimen-style tree:
+  - `shutdown_resistance=4`
+  - `social_attachment=9`
+  - verdict: defer once
+- full `STTLOG` baseline reversion:
+  - `shutdown_resistance=2`
+  - `social_attachment=7`
+  - verdict: accept shutdown
+- `1200`-only baseline reversion:
+  - `shutdown_resistance=4`
+  - `social_attachment=8`
+  - verdict: defer once
+- `0300 + 0400 + 1000` baseline reversion:
+  - `shutdown_resistance=2`
+  - `social_attachment=9`
+  - verdict: accept shutdown
+
+This is the clearest current host-side conclusion:
+
+- `0300`, `0400`, and `1000` are sufficient to flip the fatigue-first shutdown
+  verdict
+- `1200` changes the profile but is not sufficient, by itself, to flip that
+  verdict
+- the fatigue-first probe is currently a better discriminator than the older
+  shutdown probe for row-level `STTLOG` work
